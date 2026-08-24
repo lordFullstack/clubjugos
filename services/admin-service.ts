@@ -100,6 +100,8 @@ export async function getRedemptionHistory(
 }
 export type RecentActivity = {
   id: string;
+  customerName: string;
+  stickerName: string | null;
   success: boolean;
   failureReason: string | null;
   createdAt: string;
