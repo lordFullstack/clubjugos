@@ -17,10 +17,89 @@ export async function getAdminKpis(): Promise<AdminKpis | null> {
   return data;
 }
 
-export type RecentActivity = {
+export type CustomerRow = {
+  id: string;
+  name: string;
+  phone: string;
+  email: string | null;
+  stickerCount: number;
+  lastActivity: string | null;
+};
+
+export async function getBusinessCustomers(
+  businessId: string,
+): Promise<CustomerRow[]> {
+  const supabase = await createClient();
+  const { data: customers } = await supabase
+    .from("profiles")
+    .select("id, name, phone, email")
+    .eq("business_id", businessId)
+    .eq("role", "CUSTOMER")
+    .order("created_at", { ascending: false });
+
+  if (!customers || customers.length === 0) return [];
+
+  const ids = customers.map((c) => c.id);
+
+  const { data: stickers } = await supabase
+    .from("customer_stickers")
+    .select("customer_id, obtained_at")
+    .in("customer_id", ids);
+
+  const countByCustomer = new Map<string, number>();
+  const lastByCustomer = new Map<string, string>();
+  for (const row of stickers ?? []) {
+    countByCustomer.set(
+      row.customer_id,
+      (countByCustomer.get(row.customer_id) ?? 0) + 1,
+    );
+    const prev = lastByCustomer.get(row.customer_id);
+    if (!prev || row.obtained_at > prev) {
+      lastByCustomer.set(row.customer_id, row.obtained_at);
+    }
+  }
+
+  return customers.map((c) => ({
+    ...c,
+    stickerCount: countByCustomer.get(c.id) ?? 0,
+    lastActivity: lastByCustomer.get(c.id) ?? null,
+  }));
+}
+
+export type RedemptionRow = {
   id: string;
   customerName: string;
-  stickerName: string | null;
+  prizeName: string;
+  redeemedAt: string;
+};
+
+export async function getRedemptionHistory(
+  limit = 50,
+): Promise<RedemptionRow[]> {
+  const supabase = await createClient();
+  // redemptions tiene dos FKs hacia profiles (customer_id y operator_id),
+  // por eso hay que indicar explícitamente cuál usar en el embed.
+  const { data } = await supabase
+    .from("redemptions")
+    .select(
+      "id, redeemed_at, profiles!redemptions_customer_id_fkey(name), prizes(name)",
+    )
+    .order("redeemed_at", { ascending: false })
+    .limit(limit);
+
+  return (data ?? []).map((row) => {
+    const profile = Array.isArray(row.profiles) ? row.profiles[0] : row.profiles;
+    const prize = Array.isArray(row.prizes) ? row.prizes[0] : row.prizes;
+    return {
+      id: row.id,
+      customerName: profile?.name ?? "Cliente",
+      prizeName: prize?.name ?? "Premio",
+      redeemedAt: row.redeemed_at,
+    };
+  });
+}
+export type RecentActivity = {
+  id: string;
   success: boolean;
   failureReason: string | null;
   createdAt: string;
