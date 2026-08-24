@@ -1,45 +1,85 @@
 "use server";
 
+import { createClient } from "@/lib/supabase/server";
 import { createServiceClient } from "@/lib/supabase/service";
 import { generateSecureToken } from "@/lib/qr/token";
-
-export type GenerateQrTokensInput = {
-  businessId: string;
-  campaignId: string;
-  quantity: number;
-  expiresInHours: number;
-};
 
 export type GeneratedQrToken = {
   token: string;
   expiresAt: string;
 };
 
+export type GenerateQrResult =
+  | { success: true; tokens: GeneratedQrToken[] }
+  | { success: false; error: string };
+
 /**
- * Genera un lote de tokens de QR criptográficamente seguros y de un solo uso.
- * Usa el cliente de service_role porque qr_tokens está completamente
- * bloqueada por RLS para cualquier rol que no sea el backend.
+ * Genera un lote de tokens de QR. Verifica que quien llama sea ADMIN u
+ * OPERATOR de un negocio con campaña activa antes de escribir nada; la
+ * escritura en sí usa service_role porque qr_tokens está bloqueada por RLS.
  */
-export async function generateQrTokens(
-  input: GenerateQrTokensInput,
-): Promise<GeneratedQrToken[]> {
-  const supabase = createServiceClient();
+export async function adminGenerateQrTokens(
+  quantity: number,
+  expiresInHours: number,
+): Promise<GenerateQrResult> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+
+  if (!user) {
+    return { success: false, error: "Debes iniciar sesión." };
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, business_id")
+    .eq("id", user.id)
+    .single();
+
+  if (!profile || (profile.role !== "ADMIN" && profile.role !== "OPERATOR")) {
+    return { success: false, error: "No tienes permiso para generar códigos QR." };
+  }
+
+  if (!profile.business_id) {
+    return { success: false, error: "Tu cuenta no está asociada a ningún negocio." };
+  }
+
+  if (!Number.isInteger(quantity) || quantity < 1 || quantity > 100) {
+    return { success: false, error: "La cantidad debe ser un número entre 1 y 100." };
+  }
+
+  const { data: campaign } = await supabase
+    .from("campaigns")
+    .select("id")
+    .eq("business_id", profile.business_id)
+    .eq("status", "active")
+    .maybeSingle();
+
+  if (!campaign) {
+    return { success: false, error: "No hay ninguna campaña activa para generar QR." };
+  }
+
+  const serviceClient = createServiceClient();
   const expiresAt = new Date(
-    Date.now() + input.expiresInHours * 60 * 60 * 1000,
+    Date.now() + expiresInHours * 60 * 60 * 1000,
   ).toISOString();
 
-  const rows = Array.from({ length: input.quantity }, () => ({
-    business_id: input.businessId,
-    campaign_id: input.campaignId,
+  const rows = Array.from({ length: quantity }, () => ({
+    business_id: profile.business_id as string,
+    campaign_id: campaign.id,
     token: generateSecureToken(),
     expires_at: expiresAt,
   }));
 
-  const { error } = await supabase.from("qr_tokens").insert(rows);
+  const { error } = await serviceClient.from("qr_tokens").insert(rows);
 
   if (error) {
-    throw new Error("No se pudieron generar los códigos QR.");
+    return { success: false, error: "No se pudieron generar los códigos QR." };
   }
 
-  return rows.map((r) => ({ token: r.token, expiresAt: r.expires_at }));
+  return {
+    success: true,
+    tokens: rows.map((r) => ({ token: r.token, expiresAt: r.expires_at })),
+  };
 }

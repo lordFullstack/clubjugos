@@ -89,10 +89,20 @@ export async function loginCustomer(
   }
 
   const supabase = await createClient();
-  const { error } = await supabase.auth.signInWithPassword(parsed.data);
+  const { data, error } = await supabase.auth.signInWithPassword(parsed.data);
 
   if (error) {
     return { error: friendlyMessage(error.message) };
+  }
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role")
+    .eq("id", data.user.id)
+    .single();
+
+  if (profile?.role === "ADMIN" || profile?.role === "OPERATOR") {
+    redirect("/admin");
   }
 
   redirect("/home");

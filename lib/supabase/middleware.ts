@@ -16,6 +16,7 @@ const PROTECTED_PATHS = [
   "/collection",
   "/prizes",
   "/profile",
+  "/admin",
 ];
 
 export async function updateSession(request: NextRequest) {
