@@ -26,8 +26,13 @@ export function QrGeneratorForm() {
         return;
       }
 
-      const siteUrl = window.location.origin;
       const t = result.tokens[0];
+      if (!t) {
+        setError("No se generó ningún código QR.");
+        return;
+      }
+
+      const siteUrl = window.location.origin;
       setItem({
         token: t.token,
         expiresAt: t.expiresAt,
