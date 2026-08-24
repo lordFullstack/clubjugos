@@ -114,6 +114,7 @@ export type PrizeView = {
   description: string | null;
   required_stickers: number;
   status: PrizeStatus;
+  customerPrizeId: string | null;
 };
 
 /**
@@ -137,16 +138,20 @@ export async function getCustomerPrizes(
 
   const { data: customerPrizes } = await supabase
     .from("customer_prizes")
-    .select("prize_id, status");
+    .select("id, prize_id, status");
 
-  const statusByPrizeId = new Map(
-    (customerPrizes ?? []).map((cp) => [cp.prize_id, cp.status as PrizeStatus]),
+  const byPrizeId = new Map<string, { id: string; status: string }>(
+    (customerPrizes ?? []).map((cp) => [cp.prize_id, { id: cp.id, status: cp.status }]),
   );
 
-  return (prizes ?? []).map((prize) => ({
-    ...prize,
-    status: statusByPrizeId.get(prize.id) ?? "LOCKED",
-  }));
+  return (prizes ?? []).map((prize) => {
+    const cp = byPrizeId.get(prize.id);
+    return {
+      ...prize,
+      status: (cp?.status as PrizeStatus) ?? "LOCKED",
+      customerPrizeId: cp?.id ?? null,
+    };
+  });
 }
 
 export type HistoryItem = {

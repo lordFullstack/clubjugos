@@ -5,6 +5,7 @@ import {
   getCustomerPrizes,
   type PrizeStatus,
 } from "@/services/customer-service";
+import { RedeemPrizeButton } from "@/components/redeem-prize-button";
 import { BottomNav } from "@/components/bottom-nav";
 
 const STATUS_LABEL: Record<PrizeStatus, { label: string; className: string }> = {
@@ -52,7 +53,7 @@ export default async function PrizesPage() {
             return (
               <li
                 key={prize.id}
-                className="flex items-center gap-4 rounded-2xl bg-white p-4 shadow-card"
+                className="flex flex-wrap items-center gap-3 rounded-2xl bg-white p-4 shadow-card"
               >
                 <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-2xl">
                   🎁
@@ -63,11 +64,15 @@ export default async function PrizesPage() {
                     Requiere {prize.required_stickers} stickers
                   </p>
                 </div>
-                <span
-                  className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${status.className}`}
-                >
-                  {status.label}
-                </span>
+                {prize.status === "AVAILABLE" && prize.customerPrizeId ? (
+                  <RedeemPrizeButton customerPrizeId={prize.customerPrizeId} />
+                ) : (
+                  <span
+                    className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${status.className}`}
+                  >
+                    {status.label}
+                  </span>
+                )}
               </li>
             );
           })}
