@@ -9,6 +9,7 @@ const stickerSchema = z.object({
   name: z.string().trim().min(1, "Ingresa un nombre").max(60),
   description: z.string().trim().max(300).optional(),
   emoji: z.string().trim().min(1, "Ingresa un emoji").max(8),
+  imageUrl: z.string().trim().max(300).optional(),
   rarity: z.enum(["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY"]),
   probability: z.coerce
     .number()
@@ -33,6 +34,7 @@ export async function saveSticker(
     name: formData.get("name"),
     description: formData.get("description"),
     emoji: formData.get("emoji"),
+    imageUrl: formData.get("imageUrl"),
     rarity: formData.get("rarity"),
     probability: formData.get("probability"),
   });
@@ -45,13 +47,19 @@ export async function saveSticker(
     return { fieldErrors };
   }
 
-  const { name, description, emoji, rarity, probability } = parsed.data;
+  const { name, description, emoji, imageUrl, rarity, probability } = parsed.data;
   const service = createServiceClient();
 
   if (ids.stickerId) {
     const { error } = await service
       .from("stickers")
-      .update({ name, description: description || null, emoji, rarity })
+      .update({
+        name,
+        description: description || null,
+        emoji,
+        image_url: imageUrl || null,
+        rarity,
+      })
       .eq("id", ids.stickerId);
     if (error) return { error: "No se pudo actualizar el sticker." };
 
@@ -68,6 +76,7 @@ export async function saveSticker(
         name,
         description: description || null,
         emoji,
+        image_url: imageUrl || null,
         rarity,
         base_probability: probability,
       })

@@ -87,7 +87,7 @@ export function PrizeForm({ prize }: { prize?: AdminPrizeRow }) {
       <button
         type="submit"
         disabled={isPending}
-        className="col-span-2 rounded-xl bg-brand-500 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="col-span-2 rounded-xl bg-citrus-500 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {isPending ? "Guardando..." : prize ? "Guardar cambios" : "Crear premio"}
       </button>

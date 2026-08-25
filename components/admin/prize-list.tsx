@@ -24,7 +24,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
       ) : (
         <button
           onClick={() => setCreating(true)}
-          className="rounded-xl bg-brand-500 px-4 py-2.5 text-sm font-bold text-white"
+          className="rounded-xl bg-citrus-500 px-4 py-2.5 text-sm font-bold text-white"
         >
           + Nuevo premio
         </button>
@@ -47,7 +47,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
               key={prize.id}
               className="flex flex-wrap items-center gap-3 rounded-2xl bg-white p-4 shadow-card"
             >
-              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-2xl">
+              <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-xl bg-citrus-50 text-2xl">
                 🎁
               </div>
               <div className="min-w-0 flex-1">
@@ -63,7 +63,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
                 }
                 className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
                   prize.status === "active"
-                    ? "bg-brand-100 text-brand-700"
+                    ? "bg-citrus-100 text-citrus-700"
                     : "bg-ink-900/5 text-ink-500"
                 }`}
               >
@@ -71,7 +71,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
               </button>
               <button
                 onClick={() => setEditingId(prize.id)}
-                className="shrink-0 text-xs font-semibold text-brand-600"
+                className="shrink-0 text-xs font-semibold text-citrus-600"
               >
                 Editar
               </button>

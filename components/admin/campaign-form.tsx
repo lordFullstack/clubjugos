@@ -109,7 +109,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
       <button
         type="submit"
         disabled={isPending}
-        className="col-span-full rounded-xl bg-brand-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="col-span-full rounded-xl bg-citrus-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {isPending
           ? "Guardando..."

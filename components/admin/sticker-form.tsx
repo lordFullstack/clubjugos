@@ -1,12 +1,28 @@
 "use client";
 
-import { useActionState } from "react";
+import { useActionState, useState } from "react";
+import Image from "next/image";
 import { saveSticker, type StickerFormState } from "@/services/sticker-admin-actions";
 import type { StickerRow } from "@/services/sticker-admin-service";
 
 const initialState: StickerFormState = {};
 
 const RARITIES = ["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY"] as const;
+
+// Set de la "Primera campaña" — cárgalas o reemplázalas por las tuyas en
+// public/stickers/.
+const IMAGE_OPTIONS = [
+  "/stickers/banana-parce.png",
+  "/stickers/coco-tranqui.png",
+  "/stickers/sandia-vamos.png",
+  "/stickers/mango-afan.png",
+  "/stickers/piña-rumba.png",
+  "/stickers/limon-quemasspue.png",
+  "/stickers/papaya-encanta.png",
+  "/stickers/uva-tusabes.png",
+  "/stickers/mango-fria.png",
+  "/stickers/sandia-descanso.png",
+];
 
 export function StickerForm({
   campaignId,
@@ -20,6 +36,7 @@ export function StickerForm({
     campaignId,
   });
   const [state, formAction, isPending] = useActionState(action, initialState);
+  const [imageUrl, setImageUrl] = useState(sticker?.imageUrl ?? "");
 
   return (
     <form
@@ -37,7 +54,7 @@ export function StickerForm({
       </label>
 
       <label className="text-sm font-semibold text-ink-700">
-        Emoji
+        Emoji (respaldo si no hay imagen)
         <input
           name="emoji"
           defaultValue={sticker?.emoji ?? ""}
@@ -61,6 +78,42 @@ export function StickerForm({
           ))}
         </select>
       </label>
+
+      <div className="col-span-2">
+        <p className="text-sm font-semibold text-ink-700">Imagen del sticker</p>
+        <input type="hidden" name="imageUrl" value={imageUrl} />
+        <div className="mt-2 grid grid-cols-5 gap-2">
+          {IMAGE_OPTIONS.map((src) => (
+            <button
+              key={src}
+              type="button"
+              onClick={() => setImageUrl(src === imageUrl ? "" : src)}
+              className={`relative flex aspect-square items-center justify-center rounded-xl border-2 bg-paper-50 p-1 transition ${
+                imageUrl === src
+                  ? "border-citrus-500 ring-2 ring-citrus-200"
+                  : "border-black/10"
+              }`}
+            >
+              <Image
+                src={src}
+                alt=""
+                width={56}
+                height={56}
+                className="object-contain"
+              />
+            </button>
+          ))}
+        </div>
+        {imageUrl && (
+          <button
+            type="button"
+            onClick={() => setImageUrl("")}
+            className="mt-1.5 text-xs font-semibold text-ink-500 underline"
+          >
+            Quitar imagen (usar solo emoji)
+          </button>
+        )}
+      </div>
 
       <label className="col-span-2 text-sm font-semibold text-ink-700">
         Descripción
@@ -102,7 +155,7 @@ export function StickerForm({
       <button
         type="submit"
         disabled={isPending}
-        className="col-span-2 rounded-xl bg-brand-500 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="col-span-2 rounded-xl bg-citrus-500 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {isPending
           ? "Guardando..."

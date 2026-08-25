@@ -66,7 +66,7 @@ export function QrGeneratorForm() {
           type="button"
           disabled={isPending}
           onClick={handleGenerate}
-          className="mt-4 w-full rounded-xl bg-brand-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60 sm:w-auto sm:px-6"
+          className="mt-4 w-full rounded-xl bg-citrus-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60 sm:w-auto sm:px-6"
         >
           {isPending ? "Generando..." : "GENERAR QR"}
         </button>
@@ -95,7 +95,7 @@ export function QrGeneratorForm() {
             <p className="mt-1 text-xs text-ink-500">
               Vence: {new Date(item.expiresAt).toLocaleString("es-CO")}
             </p>
-            <p className="mt-2 inline-block rounded-full bg-brand-100 px-3 py-1 text-xs font-bold text-brand-700">
+            <p className="mt-2 inline-block rounded-full bg-citrus-100 px-3 py-1 text-xs font-bold text-citrus-700">
               AVAILABLE
             </p>
 
@@ -111,7 +111,7 @@ export function QrGeneratorForm() {
                 type="button"
                 onClick={handleGenerate}
                 disabled={isPending}
-                className="flex-1 rounded-xl bg-brand-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+                className="flex-1 rounded-xl bg-citrus-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
               >
                 {isPending ? "Generando..." : "GENERAR OTRO"}
               </button>

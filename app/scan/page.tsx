@@ -19,7 +19,7 @@ export default async function ScanPage({
   const { error } = await searchParams;
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-brand-900 px-6 py-10 text-center">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-6 bg-citrus-900 px-6 py-10 text-center">
       <div>
         <h1 className="font-display text-xl font-extrabold text-white">
           Escanea el QR de tu compra

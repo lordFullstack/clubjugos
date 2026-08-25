@@ -32,7 +32,7 @@ export function AdminShell({
         <div className="mx-auto flex max-w-6xl items-center justify-between">
           <div>
             <p className="font-display text-lg font-extrabold text-ink-900">
-              🥤 JugoClub <span className="text-brand-500">Admin</span>
+              🥤 JugoClub <span className="text-citrus-500">Admin</span>
             </p>
             <p className="text-xs text-ink-500">
               {name} · {role === "ADMIN" ? "Administrador" : "Operador"}
@@ -57,7 +57,7 @@ export function AdminShell({
                 href={link.href}
                 className={`shrink-0 rounded-lg px-3 py-1.5 text-sm font-semibold transition ${
                   active
-                    ? "bg-brand-500 text-white"
+                    ? "bg-citrus-500 text-white"
                     : "text-ink-500 hover:bg-black/5"
                 }`}
               >
