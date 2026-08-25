@@ -1,5 +1,6 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
+import { ServiceWorkerRegister } from "@/components/sw-register";
 import "./globals.css";
 
 const inter = Inter({
@@ -31,6 +32,12 @@ export const metadata: Metadata = {
   title: "JugoClub — Compra. Colecciona. Gana.",
   description:
     "Colecciona stickers digitales cada vez que compras y desbloquea premios en tu juguería favorita.",
+  manifest: "/manifest.webmanifest",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "JugoClub",
+  },
 };
 
 export const viewport: Viewport = {
@@ -50,7 +57,10 @@ export default function RootLayout({
       lang="es"
       className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}
     >
-      <body>{children}</body>
+      <body>
+        {children}
+        <ServiceWorkerRegister />
+      </body>
     </html>
   );
 }
