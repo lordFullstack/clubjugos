@@ -8,6 +8,7 @@ import {
 import { RedeemPrizeButton } from "@/components/redeem-prize-button";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard } from "@/components/ticket-card";
+import { IconGift } from "@/components/icons";
 
 const STATUS_LABEL: Record<PrizeStatus, { label: string; className: string }> = {
   AVAILABLE: { label: "Disponible", className: "bg-citrus-100 text-citrus-700" },
@@ -37,9 +38,7 @@ export default async function PrizesPage() {
 
       {prizes.length === 0 ? (
         <TicketCard className="mt-6 px-6 pb-6 text-center">
-          <div className="text-4xl" role="img" aria-label="Regalo">
-            🎁
-          </div>
+          <IconGift className="mx-auto h-10 w-10 text-citrus-400" strokeWidth={1.6} />
           <p className="mt-2 font-semibold text-ink-900">
             Todavía no hay premios configurados
           </p>
@@ -54,8 +53,8 @@ export default async function PrizesPage() {
             return (
               <li key={prize.id}>
                 <TicketCard className="flex flex-wrap items-center gap-3 px-4 pb-4">
-                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-citrus-50 text-2xl">
-                    🎁
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-citrus-50 text-citrus-500">
+                    <IconGift className="h-6 w-6" strokeWidth={1.8} />
                   </div>
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-bold text-ink-900">{prize.name}</p>

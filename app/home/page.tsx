@@ -9,6 +9,7 @@ import { StickerGrid } from "@/components/sticker-grid";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
+import { IconJuiceCup, IconScan } from "@/components/icons";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -71,9 +72,7 @@ export default async function HomePage() {
           </TicketCard>
         ) : (
           <TicketCard className="px-6 pb-6 text-center">
-            <div className="text-4xl" role="img" aria-label="Vaso de jugo">
-              🥤
-            </div>
+            <IconJuiceCup className="mx-auto h-10 w-10 text-citrus-400" strokeWidth={1.6} />
             <p className="mt-2 font-semibold text-ink-900">
               Todavía no estás en ninguna temporada activa
             </p>
@@ -86,9 +85,10 @@ export default async function HomePage() {
 
       <Link
         href="/scan"
-        className="mt-6 block w-full rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
+        className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
       >
-        📷 ESCANEAR QR
+        <IconScan className="h-5 w-5" strokeWidth={2.1} />
+        ESCANEAR QR
       </Link>
 
       <BottomNav />

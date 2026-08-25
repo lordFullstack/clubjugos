@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import Link from "next/link";
+import { IconGift } from "@/components/icons";
 
 type Props = {
   name: string;
@@ -107,8 +108,9 @@ export function RewardReveal({
       </p>
 
       {prizeUnlocked && (
-        <p className="rounded-2xl border-2 border-dashed border-foil-light bg-white/10 px-4 py-3 text-sm font-bold text-foil-light">
-          🎁 ¡Desbloqueaste tu premio! Revísalo en la sección Premios.
+        <p className="flex items-center justify-center gap-2 rounded-2xl border-2 border-dashed border-foil-light bg-white/10 px-4 py-3 text-sm font-bold text-foil-light">
+          <IconGift className="h-5 w-5 shrink-0" strokeWidth={1.8} />
+          ¡Desbloqueaste tu premio! Revísalo en la sección Premios.
         </p>
       )}
 

@@ -8,6 +8,7 @@ import { StickerGrid } from "@/components/sticker-grid";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
+import { IconAlbum } from "@/components/icons";
 
 export default async function CollectionPage() {
   const supabase = await createClient();
@@ -58,9 +59,7 @@ export default async function CollectionPage() {
         </TicketCard>
       ) : (
         <TicketCard className="mt-6 px-6 pb-6 text-center">
-          <div className="text-4xl" role="img" aria-label="Stickers">
-            🎴
-          </div>
+          <IconAlbum className="mx-auto h-10 w-10 text-citrus-400" strokeWidth={1.6} />
           <p className="mt-2 font-semibold text-ink-900">
             Todavía no hay una colección activa
           </p>

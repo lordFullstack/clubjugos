@@ -7,6 +7,7 @@ import {
 import { logout } from "@/services/auth-service";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard } from "@/components/ticket-card";
+import { IconAvatar } from "@/components/icons";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -24,8 +25,8 @@ export default async function ProfilePage() {
   return (
     <main className="min-h-screen bg-paper-100 px-6 pb-32 pt-8">
       <div className="flex flex-col items-center text-center">
-        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-4xl shadow-card">
-          🙂
+        <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-citrus-500 shadow-card">
+          <IconAvatar className="h-9 w-9" strokeWidth={1.6} />
         </div>
         <h1 className="mt-3 font-display text-xl font-extrabold text-ink-900">
           {profile?.name ?? "Cliente"}
