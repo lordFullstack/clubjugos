@@ -21,6 +21,14 @@ const RARITY_LABEL: Record<string, string> = {
   LEGENDARY: "STICKER LEGENDARIO",
 };
 
+const RARITY_COLOR: Record<string, string> = {
+  COMMON: "text-paper-200",
+  UNCOMMON: "text-jade-300",
+  RARE: "text-sky-300",
+  EPIC: "text-guava-light",
+  LEGENDARY: "text-foil-light",
+};
+
 export function RewardReveal({
   name,
   emoji,
@@ -47,11 +55,14 @@ export function RewardReveal({
 
   if (count > 0) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center bg-brand-900 text-white">
-        <p className="text-sm font-semibold uppercase tracking-widest text-white/60">
-          Abriendo tu recompensa...
+      <div className="flex min-h-screen flex-col items-center justify-center bg-jade-900 text-white">
+        <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/50">
+          Abriendo tu boleta...
         </p>
-        <p key={count} className="mt-4 animate-pop-in text-7xl font-black">
+        <p
+          key={count}
+          className="mt-4 animate-pop-in font-display text-8xl font-black text-foil-light"
+        >
           {count}
         </p>
       </div>
@@ -59,54 +70,60 @@ export function RewardReveal({
   }
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-brand-50 px-6 text-center">
+    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-jade-900 px-6 text-center text-white">
       {isRare && <ConfettiBurst />}
 
-      <p className="animate-pop-in text-2xl font-extrabold text-ink-900">
-        🎉 ¡LO CONSEGUISTE!
+      <p className="animate-tear-in font-display text-2xl font-extrabold">
+        ¡LO CONSEGUISTE!
       </p>
 
-      <div className="flex h-32 w-32 animate-pop-in items-center justify-center rounded-3xl bg-white text-7xl shadow-soft">
+      <div
+        className={`foil-shine play relative flex h-32 w-32 animate-pop-in items-center justify-center overflow-hidden rounded-4xl bg-white text-7xl shadow-soft ${
+          rarity === "LEGENDARY" ? "ring-4 ring-foil" : ""
+        }`}
+      >
         {emoji}
       </div>
 
       <div>
-        <p className="text-xs font-bold uppercase tracking-wide text-brand-500">
+        <p
+          className={`text-xs font-bold uppercase tracking-[0.2em] ${
+            RARITY_COLOR[rarity] ?? RARITY_COLOR.COMMON
+          }`}
+        >
           {RARITY_LABEL[rarity] ?? "STICKER"}
         </p>
-        <p className="font-display text-lg font-extrabold text-ink-900">
-          {name}
-        </p>
+        <p className="mt-1 font-display text-xl font-extrabold">{name}</p>
       </div>
 
       {isDuplicate && (
-        <p className="rounded-full bg-ink-900/5 px-4 py-1.5 text-sm font-medium text-ink-500">
+        <p className="rounded-full bg-white/10 px-4 py-1.5 text-sm font-medium text-white/70">
           Sticker repetido
         </p>
       )}
 
-      <p className="text-ink-500">
+      <p className="text-white/70">
         Ya tienes {obtainedCount} de {completionTarget}
       </p>
 
       {prizeUnlocked && (
-        <p className="rounded-2xl bg-brand-100 px-4 py-3 text-sm font-bold text-brand-700">
-          🎁 ¡Desbloqueaste tu premio! Revisalo en la sección Premios.
+        <p className="rounded-2xl border-2 border-dashed border-foil-light bg-white/10 px-4 py-3 text-sm font-bold text-foil-light">
+          🎁 ¡Desbloqueaste tu premio! Revísalo en la sección Premios.
         </p>
       )}
 
       <Link
         href="/collection"
-        className="mt-4 w-full max-w-sm rounded-2xl bg-brand-500 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
+        className="mt-4 w-full max-w-sm rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
       >
-        VER COLECCIÓN
+        VER ÁLBUM
       </Link>
     </main>
   );
 }
 
 function ConfettiBurst() {
-  const pieces = Array.from({ length: 16 });
+  const pieces = Array.from({ length: 18 });
   return (
     <div className="pointer-events-none fixed inset-0 overflow-hidden">
       {pieces.map((_, i) => (
@@ -115,7 +132,7 @@ function ConfettiBurst() {
           className="absolute top-1/4 h-2 w-2 animate-pop-in rounded-sm"
           style={{
             left: `${(i / pieces.length) * 100}%`,
-            backgroundColor: ["#f97316", "#a3e635", "#fbbf24", "#c084fc"][
+            backgroundColor: ["#e5511a", "#146356", "#c89b3c", "#e23e77"][
               i % 4
             ],
             animationDelay: `${i * 30}ms`,

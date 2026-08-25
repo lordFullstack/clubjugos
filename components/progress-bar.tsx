@@ -3,14 +3,14 @@ export function ProgressBar({ percent }: { percent: number }) {
 
   return (
     <div
-      className="mt-1.5 h-2.5 w-full overflow-hidden rounded-full bg-black/5"
+      className="mt-2 h-3 w-full overflow-hidden rounded-full bg-ink-900/[0.06]"
       role="progressbar"
       aria-valuenow={clamped}
       aria-valuemin={0}
       aria-valuemax={100}
     >
       <div
-        className="h-full rounded-full bg-brand-500 transition-all duration-500"
+        className="h-full rounded-full bg-gradient-to-r from-citrus-400 via-citrus-500 to-citrus-600 transition-all duration-700 ease-out"
         style={{ width: `${clamped}%` }}
       />
     </div>

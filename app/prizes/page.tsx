@@ -7,9 +7,10 @@ import {
 } from "@/services/customer-service";
 import { RedeemPrizeButton } from "@/components/redeem-prize-button";
 import { BottomNav } from "@/components/bottom-nav";
+import { TicketCard } from "@/components/ticket-card";
 
 const STATUS_LABEL: Record<PrizeStatus, { label: string; className: string }> = {
-  AVAILABLE: { label: "Disponible", className: "bg-brand-100 text-brand-700" },
+  AVAILABLE: { label: "Disponible", className: "bg-citrus-100 text-citrus-700" },
   REDEEMED: { label: "Canjeado", className: "bg-ink-900/5 text-ink-500" },
   EXPIRED: { label: "Expirado", className: "bg-red-50 text-red-500" },
   LOCKED: { label: "Bloqueado", className: "bg-ink-900/5 text-ink-500" },
@@ -29,13 +30,13 @@ export default async function PrizesPage() {
   const prizes = await getCustomerPrizes(profile?.business_id ?? null);
 
   return (
-    <main className="min-h-screen bg-brand-50 px-6 pb-28 pt-8">
-      <h1 className="font-display text-2xl font-extrabold text-ink-900">
+    <main className="min-h-screen bg-paper-100 px-6 pb-32 pt-8">
+      <h1 className="font-display text-3xl font-black text-ink-900">
         Premios
       </h1>
 
       {prizes.length === 0 ? (
-        <div className="mt-6 rounded-3xl bg-white p-6 text-center shadow-card">
+        <TicketCard className="mt-6 px-6 pb-6 text-center">
           <div className="text-4xl" role="img" aria-label="Regalo">
             🎁
           </div>
@@ -45,34 +46,33 @@ export default async function PrizesPage() {
           <p className="mt-1 text-sm text-ink-500">
             Cuando tu juguería active premios, los vas a ver acá.
           </p>
-        </div>
+        </TicketCard>
       ) : (
         <ul className="mt-6 space-y-3">
           {prizes.map((prize) => {
             const status = STATUS_LABEL[prize.status];
             return (
-              <li
-                key={prize.id}
-                className="flex flex-wrap items-center gap-3 rounded-2xl bg-white p-4 shadow-card"
-              >
-                <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-brand-50 text-2xl">
-                  🎁
-                </div>
-                <div className="min-w-0 flex-1">
-                  <p className="truncate font-bold text-ink-900">{prize.name}</p>
-                  <p className="text-xs text-ink-500">
-                    Requiere {prize.required_stickers} stickers
-                  </p>
-                </div>
-                {prize.status === "AVAILABLE" && prize.customerPrizeId ? (
-                  <RedeemPrizeButton customerPrizeId={prize.customerPrizeId} />
-                ) : (
-                  <span
-                    className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${status.className}`}
-                  >
-                    {status.label}
-                  </span>
-                )}
+              <li key={prize.id}>
+                <TicketCard className="flex flex-wrap items-center gap-3 px-4 pb-4">
+                  <div className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-citrus-50 text-2xl">
+                    🎁
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <p className="truncate font-bold text-ink-900">{prize.name}</p>
+                    <p className="font-mono text-xs text-ink-500">
+                      Requiere {prize.required_stickers} stickers
+                    </p>
+                  </div>
+                  {prize.status === "AVAILABLE" && prize.customerPrizeId ? (
+                    <RedeemPrizeButton customerPrizeId={prize.customerPrizeId} />
+                  ) : (
+                    <span
+                      className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${status.className}`}
+                    >
+                      {status.label}
+                    </span>
+                  )}
+                </TicketCard>
               </li>
             );
           })}

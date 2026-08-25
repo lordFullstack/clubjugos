@@ -26,7 +26,7 @@ export function RedeemPrizeButton({
       <button
         type="button"
         onClick={() => setConfirming(true)}
-        className="shrink-0 rounded-full bg-brand-500 px-3.5 py-1.5 text-xs font-bold text-white transition active:scale-95"
+        className="shrink-0 rounded-full bg-citrus-500 px-3.5 py-1.5 text-xs font-bold text-white transition active:scale-95"
       >
         Canjear
       </button>
@@ -40,7 +40,7 @@ export function RedeemPrizeButton({
           type="button"
           onClick={() => setConfirming(false)}
           disabled={isPending}
-          className="rounded-full border border-black/10 px-3 py-1.5 text-xs font-semibold text-ink-700"
+          className="rounded-full border border-ink-900/10 px-3 py-1.5 text-xs font-semibold text-ink-700"
         >
           Cancelar
         </button>
@@ -59,7 +59,7 @@ export function RedeemPrizeButton({
               }
             });
           }}
-          className="rounded-full bg-brand-500 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-60"
+          className="rounded-full bg-citrus-500 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-60"
         >
           {isPending ? "Canjeando..." : "Confirmar"}
         </button>

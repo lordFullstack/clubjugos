@@ -8,6 +8,7 @@ import {
 import { StickerGrid } from "@/components/sticker-grid";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -29,40 +30,47 @@ export default async function HomePage() {
   const progressPct = target > 0 ? Math.round((obtainedCount / target) * 100) : 0;
 
   return (
-    <main className="min-h-screen bg-brand-50 px-6 pb-28 pt-8">
+    <main className="min-h-screen bg-paper-100 px-6 pb-32 pt-8">
       <header>
-        <p className="text-sm font-medium text-ink-500">Hola 👋</p>
-        <h1 className="font-display text-2xl font-extrabold text-ink-900">
+        <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-citrus-500">
+          Hola
+        </p>
+        <h1 className="font-display text-3xl font-black text-ink-900">
           {firstName}
         </h1>
       </header>
 
       <section className="mt-6">
         {campaign ? (
-          <div className="rounded-3xl bg-white p-5 shadow-card">
-            <p className="text-xs font-bold uppercase tracking-wide text-brand-500">
-              Colección
-            </p>
-            <h2 className="mt-0.5 font-display text-lg font-extrabold text-ink-900">
-              {campaign.name}
-            </h2>
+          <TicketCard className="px-5 pb-5">
+            <div className="flex items-start justify-between gap-3">
+              <div>
+                <p className="text-xs font-bold uppercase tracking-wide text-citrus-500">
+                  Colección activa
+                </p>
+                <h2 className="mt-0.5 font-display text-lg font-extrabold text-ink-900">
+                  {campaign.name}
+                </h2>
+              </div>
+              <StampBadge>{progressPct}%</StampBadge>
+            </div>
 
             <div className="mt-4">
               <StickerGrid stickers={stickers} size="sm" />
             </div>
 
-            <div className="mt-4">
+            <TicketDivider className="mt-4 pt-4">
               <div className="flex items-baseline justify-between text-sm">
-                <span className="font-bold text-ink-900">
+                <span className="font-mono font-bold text-ink-900">
                   {obtainedCount} / {target}
                 </span>
-                <span className="font-semibold text-ink-500">{progressPct}%</span>
+                <span className="font-semibold text-ink-500">stickers</span>
               </div>
               <ProgressBar percent={progressPct} />
-            </div>
-          </div>
+            </TicketDivider>
+          </TicketCard>
         ) : (
-          <div className="rounded-3xl bg-white p-6 text-center shadow-card">
+          <TicketCard className="px-6 pb-6 text-center">
             <div className="text-4xl" role="img" aria-label="Vaso de jugo">
               🥤
             </div>
@@ -72,13 +80,13 @@ export default async function HomePage() {
             <p className="mt-1 text-sm text-ink-500">
               Pedile a tu juguería que te sume a la campaña actual.
             </p>
-          </div>
+          </TicketCard>
         )}
       </section>
 
       <Link
         href="/scan"
-        className="mt-6 block w-full rounded-2xl bg-brand-500 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98] active:bg-brand-600"
+        className="mt-6 block w-full rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
       >
         📷 ESCANEAR QR
       </Link>

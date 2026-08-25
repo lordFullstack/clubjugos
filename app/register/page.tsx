@@ -14,13 +14,13 @@ export default function RegisterPage() {
   );
 
   return (
-    <main className="flex min-h-screen flex-col justify-center bg-brand-50 px-6 py-10">
+    <main className="flex min-h-screen flex-col justify-center bg-paper-100 px-6 py-10">
       <div className="mx-auto w-full max-w-sm">
         <div className="mb-8 text-center">
-          <div className="text-5xl" role="img" aria-label="Vaso de jugo">
-            🥤
-          </div>
-          <h1 className="mt-3 font-display text-2xl font-extrabold text-ink-900">
+          <span className="inline-block rounded-full border-2 border-dashed border-citrus-400 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-citrus-600">
+            JugoClub
+          </span>
+          <h1 className="mt-4 font-display text-2xl font-extrabold text-ink-900">
             Crea tu cuenta
           </h1>
           <p className="mt-1 text-sm text-ink-500">
@@ -71,7 +71,7 @@ export default function RegisterPage() {
           <button
             type="submit"
             disabled={isPending}
-            className="w-full rounded-2xl bg-brand-500 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98] active:bg-brand-600 disabled:opacity-60"
+            className="w-full rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98] disabled:opacity-60"
           >
             {isPending ? "Creando cuenta..." : "CREAR CUENTA"}
           </button>
@@ -79,7 +79,7 @@ export default function RegisterPage() {
 
         <p className="mt-6 text-center text-sm text-ink-500">
           ¿Ya tienes una cuenta?{" "}
-          <Link href="/login" className="font-semibold text-brand-600">
+          <Link href="/login" className="font-bold text-citrus-600">
             Inicia sesión
           </Link>
         </p>

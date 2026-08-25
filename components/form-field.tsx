@@ -19,7 +19,7 @@ export function FormField({
     <div>
       <label
         htmlFor={name}
-        className="mb-1.5 block text-sm font-semibold text-ink-700"
+        className="mb-1.5 block text-sm font-bold text-ink-700"
       >
         {label}
       </label>
@@ -30,7 +30,7 @@ export function FormField({
         autoComplete={autoComplete}
         placeholder={placeholder}
         required
-        className="w-full rounded-2xl border border-black/5 bg-white px-4 py-3.5 text-base text-ink-900 shadow-card outline-none ring-brand-400 placeholder:text-ink-500/50 focus:ring-2"
+        className="w-full rounded-2xl border-2 border-ink-900/[0.06] bg-white px-4 py-3.5 text-base text-ink-900 shadow-card outline-none transition placeholder:text-ink-500/50 focus:border-citrus-400"
       />
       {error && (
         <p className="mt-1.5 text-sm font-medium text-red-600">{error}</p>

@@ -6,6 +6,7 @@ import {
 } from "@/services/customer-service";
 import { logout } from "@/services/auth-service";
 import { BottomNav } from "@/components/bottom-nav";
+import { TicketCard } from "@/components/ticket-card";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -21,7 +22,7 @@ export default async function ProfilePage() {
   const history = await getCustomerHistory();
 
   return (
-    <main className="min-h-screen bg-brand-50 px-6 pb-28 pt-8">
+    <main className="min-h-screen bg-paper-100 px-6 pb-32 pt-8">
       <div className="flex flex-col items-center text-center">
         <div className="flex h-20 w-20 items-center justify-center rounded-full bg-white text-4xl shadow-card">
           🙂
@@ -40,20 +41,20 @@ export default async function ProfilePage() {
           Historial
         </h2>
         {history.length === 0 ? (
-          <p className="mt-3 rounded-2xl bg-white p-4 text-center text-sm text-ink-500 shadow-card">
+          <TicketCard className="mt-3 px-4 pb-4 text-center text-sm text-ink-500">
             Todavía no tienes actividad. ¡Escanea tu primer QR!
-          </p>
+          </TicketCard>
         ) : (
           <ul className="mt-3 space-y-2">
             {history.map((item) => (
               <li
                 key={item.id}
-                className="flex items-center justify-between rounded-2xl bg-white p-4 shadow-card"
+                className="flex items-center justify-between rounded-2xl bg-white px-4 py-3.5 shadow-card"
               >
                 <span className="font-medium text-ink-900">
                   Obtuviste: {item.stickerName}
                 </span>
-                <span className="text-xs text-ink-500">
+                <span className="font-mono text-xs text-ink-500">
                   {new Date(item.obtainedAt).toLocaleDateString("es-CO")}
                 </span>
               </li>
@@ -65,7 +66,7 @@ export default async function ProfilePage() {
       <form action={logout} className="mt-8">
         <button
           type="submit"
-          className="w-full rounded-2xl border border-black/10 bg-white py-3.5 text-sm font-semibold text-ink-700 shadow-card transition active:scale-[0.98]"
+          className="w-full rounded-2xl border-2 border-ink-900/[0.06] bg-white py-3.5 text-sm font-bold text-ink-700 shadow-card transition active:scale-[0.98]"
         >
           Cerrar sesión
         </button>
