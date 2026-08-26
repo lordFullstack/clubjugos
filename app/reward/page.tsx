@@ -7,12 +7,18 @@ export default async function RewardPage({
 }: {
   searchParams: Promise<{
     name?: string;
-    emoji?: string;
+    img?: string;
     rarity?: string;
-    dup?: string;
+    complete?: string;
     count?: string;
     target?: string;
     prize?: string;
+    spName?: string;
+    spImg?: string;
+    spRarity?: string;
+    spDup?: string;
+    spPrize?: string;
+    spPrizeName?: string;
   }>;
 }) {
   const supabase = await createClient();
@@ -26,19 +32,38 @@ export default async function RewardPage({
 
   const params = await searchParams;
 
-  if (!params.name) {
+  // Debe venir de un escaneo real: al menos un sticker nuevo o un especial.
+  if (!params.name && !params.spName) {
     redirect("/home");
   }
 
   return (
     <RewardReveal
-      name={params.name}
-      emoji={params.emoji ?? "🧃"}
-      rarity={params.rarity ?? "COMMON"}
-      isDuplicate={params.dup === "1"}
+      sticker={
+        params.name
+          ? {
+              name: params.name,
+              imageUrl: params.img ?? null,
+              rarity: params.rarity ?? "COMMON",
+            }
+          : null
+      }
+      collectionComplete={params.complete === "1"}
       obtainedCount={Number(params.count ?? 0)}
       completionTarget={Number(params.target ?? 0)}
       prizeUnlocked={params.prize === "1"}
+      special={
+        params.spName
+          ? {
+              name: params.spName,
+              imageUrl: params.spImg ?? null,
+              rarity: params.spRarity ?? "EPIC",
+              isDuplicate: params.spDup === "1",
+              prizeUnlocked: params.spPrize === "1",
+              prizeName: params.spPrizeName ?? null,
+            }
+          : null
+      }
     />
   );
 }

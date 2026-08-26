@@ -69,9 +69,10 @@ export async function getCurrentCollection(
 
   const { data: campaignStickers } = await supabase
     .from("campaign_stickers")
-    .select("sticker_id, stickers(id, name, image_url, rarity)")
+    .select("sticker_id, stickers!inner(id, name, image_url, rarity, kind)")
     .eq("campaign_id", campaign.id)
-    .eq("status", "active");
+    .eq("status", "active")
+    .eq("stickers.kind", "COLLECTIBLE");
 
   const { data: obtained } = await supabase
     .from("customer_stickers")
@@ -104,6 +105,64 @@ export async function getCurrentCollection(
     stickers,
     obtainedCount: stickers.filter((s) => s.obtained).length,
   };
+}
+
+export type SpecialWin = {
+  id: string;
+  name: string;
+  image_url: string | null;
+  rarity: string;
+  count: number;
+  obtainedAt: string;
+};
+
+/**
+ * Stickers especiales que el cliente ya ganó (independientes del álbum).
+ * Se agrupan por sticker porque un mismo especial puede caer más de una vez.
+ */
+export async function getSpecialWins(
+  businessId: string | null,
+): Promise<SpecialWin[]> {
+  if (!businessId) return [];
+
+  const supabase = await createClient();
+
+  const { data: campaign } = await supabase
+    .from("campaigns")
+    .select("id")
+    .eq("business_id", businessId)
+    .eq("status", "active")
+    .maybeSingle();
+
+  if (!campaign) return [];
+
+  const { data } = await supabase
+    .from("customer_stickers")
+    .select("obtained_at, stickers!inner(id, name, image_url, rarity, kind)")
+    .eq("campaign_id", campaign.id)
+    .eq("stickers.kind", "SPECIAL")
+    .order("obtained_at", { ascending: false });
+
+  const byId = new Map<string, SpecialWin>();
+  for (const row of data ?? []) {
+    const sticker = Array.isArray(row.stickers) ? row.stickers[0] : row.stickers;
+    if (!sticker) continue;
+    const existing = byId.get(sticker.id);
+    if (existing) {
+      existing.count += 1;
+    } else {
+      byId.set(sticker.id, {
+        id: sticker.id,
+        name: sticker.name,
+        image_url: sticker.image_url,
+        rarity: sticker.rarity,
+        count: 1,
+        obtainedAt: row.obtained_at,
+      });
+    }
+  }
+
+  return Array.from(byId.values());
 }
 
 export type PrizeStatus = "LOCKED" | "AVAILABLE" | "REDEEMED" | "EXPIRED";

@@ -6,11 +6,19 @@ import { createServiceClient } from "@/lib/supabase/service";
 export type ScanResult =
   | {
       success: true;
-      sticker: { name: string; emoji: string | null; rarity: string };
-      isDuplicate: boolean;
+      sticker: { name: string; imageUrl: string | null; rarity: string } | null;
+      collectionComplete: boolean;
       obtainedCount: number;
       completionTarget: number;
       prizeUnlocked: boolean;
+      special: {
+        name: string;
+        imageUrl: string | null;
+        rarity: string;
+        isDuplicate: boolean;
+        prizeUnlocked: boolean;
+        prizeName: string | null;
+      } | null;
     }
   | { success: false; error: string };
 
@@ -37,7 +45,8 @@ function friendlyScanError(code: string): string {
  * Punto de entrada único para canjear un QR. Identifica al cliente con su
  * sesión (cookies), pero delega la validación y entrega del sticker a la
  * función atómica de la base de datos usando el cliente de service_role.
- * El frontend nunca decide si el QR es válido ni qué sticker se entrega.
+ * El frontend nunca decide si el QR es válido, qué sticker coleccionable
+ * toca (se sortea sin repetición mientras falten) ni si cae un especial.
  */
 export async function scanQrToken(token: string): Promise<ScanResult> {
   const supabase = await createClient();
@@ -69,9 +78,10 @@ export async function scanQrToken(token: string): Promise<ScanResult> {
   return {
     success: true,
     sticker: data.sticker,
-    isDuplicate: data.isDuplicate,
+    collectionComplete: data.collectionComplete,
     obtainedCount: data.obtainedCount,
     completionTarget: data.completionTarget,
     prizeUnlocked: data.prizeUnlocked,
+    special: data.special,
   };
 }

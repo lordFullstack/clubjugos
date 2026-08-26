@@ -1,6 +1,12 @@
 import Link from "next/link";
+import Image from "next/image";
 
-const PREVIEW_STICKERS = ["🍓", "🥭", "🍊", "🍍"];
+const PREVIEW_STICKERS = [
+  "/stickers/mango-afan.png",
+  "/stickers/papaya-encanta.png",
+  "/stickers/sandia-vamos.png",
+  "/stickers/piña-rumba.png",
+];
 
 export default function LandingPage() {
   return (
@@ -31,13 +37,13 @@ export default function LandingPage() {
             Tu primera boleta
           </p>
           <div className="mt-3 flex justify-center gap-3 px-5 pb-5">
-            {PREVIEW_STICKERS.map((emoji, i) => (
+            {PREVIEW_STICKERS.map((src, i) => (
               <div
-                key={emoji}
-                className="flex h-14 w-14 animate-pop-in items-center justify-center rounded-2xl bg-paper-100 text-2xl ring-2 ring-ink-900/5"
+                key={src}
+                className="flex h-14 w-14 animate-pop-in items-center justify-center rounded-2xl bg-paper-100 p-1.5 ring-2 ring-ink-900/5"
                 style={{ animationDelay: `${i * 90}ms` }}
               >
-                {emoji}
+                <Image src={src} alt="" width={44} height={44} className="object-contain" />
               </div>
             ))}
           </div>

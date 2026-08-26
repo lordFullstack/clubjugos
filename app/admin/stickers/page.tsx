@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { getCampaignStickers } from "@/services/sticker-admin-service";
+import { getBusinessPrizes } from "@/services/prize-admin-service";
 import { StickerList } from "@/components/admin/sticker-list";
 
 export default async function AdminStickersPage() {
@@ -29,6 +30,9 @@ export default async function AdminStickersPage() {
     : { data: null };
 
   const stickers = campaign ? await getCampaignStickers(campaign.id) : [];
+  const prizes = profile.business_id
+    ? await getBusinessPrizes(profile.business_id)
+    : [];
 
   return (
     <div>
@@ -36,7 +40,7 @@ export default async function AdminStickersPage() {
         Stickers
       </h1>
       <p className="mt-1 text-sm text-ink-500">
-        Stickers de la temporada activa y su probabilidad de aparición.
+        Coleccionables del álbum y stickers especiales con premio propio.
       </p>
 
       {!campaign ? (
@@ -44,7 +48,7 @@ export default async function AdminStickersPage() {
           Activa una campaña primero en la sección Campaña.
         </p>
       ) : (
-        <StickerList campaignId={campaign.id} stickers={stickers} />
+        <StickerList campaignId={campaign.id} stickers={stickers} prizes={prizes} />
       )}
     </div>
   );

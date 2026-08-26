@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { CollectionSticker } from "@/services/customer-service";
+import { IconAlbum } from "@/components/icons";
 
 const RARITY_RING: Record<string, string> = {
   COMMON: "ring-ink-900/10",
@@ -45,7 +46,10 @@ export function StickerGrid({
                   className="object-contain"
                 />
               ) : (
-                <span className={size === "sm" ? "text-2xl" : "text-3xl"}>🧃</span>
+                <IconAlbum
+                  className={size === "sm" ? "h-6 w-6 text-citrus-300" : "h-8 w-8 text-citrus-300"}
+                  strokeWidth={1.4}
+                />
               )
             ) : (
               <span className="font-display text-ink-900/15" aria-label="Sticker no obtenido">
