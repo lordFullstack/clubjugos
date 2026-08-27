@@ -21,7 +21,7 @@ export default async function HomePage() {
     redirect("/login");
   }
 
-  const profile = await getCustomerProfile();
+  const profile = await getCustomerProfile(user.id);
   const { campaign, stickers, obtainedCount } = await getCurrentCollection(
     profile?.business_id ?? null,
   );

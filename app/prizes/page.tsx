@@ -27,7 +27,7 @@ export default async function PrizesPage() {
     redirect("/login");
   }
 
-  const profile = await getCustomerProfile();
+  const profile = await getCustomerProfile(user.id);
   const prizes = await getCustomerPrizes(profile?.business_id ?? null);
 
   return (

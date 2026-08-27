@@ -8,17 +8,21 @@ export type CustomerProfile = {
   business_id: string | null;
 };
 
-export async function getCustomerProfile(): Promise<CustomerProfile | null> {
+/**
+ * Recibe el id del usuario ya autenticado (la página que llama a esto ya
+ * hizo su propio `auth.getUser()` para el redirect a /login, así que
+ * pedirlo de nuevo aquí sería un viaje de red completo desperdiciado en
+ * cada carga de página).
+ */
+export async function getCustomerProfile(
+  userId: string,
+): Promise<CustomerProfile | null> {
   const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-  if (!user) return null;
 
   const { data } = await supabase
     .from("profiles")
     .select("id, name, phone, email, business_id")
-    .eq("id", user.id)
+    .eq("id", userId)
     .single();
 
   return data;

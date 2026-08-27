@@ -19,8 +19,10 @@ export default async function ProfilePage() {
     redirect("/login");
   }
 
-  const profile = await getCustomerProfile();
-  const history = await getCustomerHistory();
+  const [profile, history] = await Promise.all([
+    getCustomerProfile(user.id),
+    getCustomerHistory(),
+  ]);
 
   return (
     <main className="min-h-screen bg-paper-100 px-6 pb-32 pt-8">

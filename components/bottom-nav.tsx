@@ -44,7 +44,7 @@ export function BottomNav() {
             <li key={href}>
               <Link
                 href={href}
-                className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-1.5 text-[11px] font-bold transition ${
+                className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-1.5 text-[11px] font-bold transition active:scale-90 active:bg-ink-900/5 ${
                   active ? "text-citrus-600" : "text-ink-500"
                 }`}
               >

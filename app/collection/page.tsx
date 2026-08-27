@@ -22,11 +22,11 @@ export default async function CollectionPage() {
     redirect("/login");
   }
 
-  const profile = await getCustomerProfile();
-  const { campaign, stickers, obtainedCount } = await getCurrentCollection(
-    profile?.business_id ?? null,
-  );
-  const specialWins = await getSpecialWins(profile?.business_id ?? null);
+  const profile = await getCustomerProfile(user.id);
+  const [{ campaign, stickers, obtainedCount }, specialWins] = await Promise.all([
+    getCurrentCollection(profile?.business_id ?? null),
+    getSpecialWins(profile?.business_id ?? null),
+  ]);
 
   const target = campaign?.completion_target ?? 0;
   const progressPct = target > 0 ? Math.round((obtainedCount / target) * 100) : 0;
