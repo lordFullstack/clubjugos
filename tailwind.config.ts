@@ -86,6 +86,10 @@ const config: Config = {
           "0%": { transform: "translateX(-120%) rotate(8deg)" },
           "100%": { transform: "translateX(220%) rotate(8deg)" },
         },
+        "confetti-fall": {
+          "0%": { transform: "translateY(-24px) rotate(0deg)", opacity: "1" },
+          "100%": { transform: "translateY(480px) rotate(600deg)", opacity: "0" },
+        },
         "stamp-in": {
           "0%": { transform: "scale(2) rotate(-18deg)", opacity: "0" },
           "60%": { transform: "scale(0.92) rotate(-8deg)", opacity: "1" },
@@ -100,6 +104,7 @@ const config: Config = {
         "pop-in": "pop-in 0.25s ease-out",
         float: "float 3s ease-in-out infinite",
         shine: "shine 1.4s ease-in-out",
+        "confetti-fall": "confetti-fall 1.6s ease-in forwards",
         "stamp-in": "stamp-in 0.5s cubic-bezier(0.34,1.56,0.64,1)",
         "tear-in": "tear-in 0.4s ease-out",
       },
