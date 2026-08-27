@@ -40,6 +40,9 @@ const RARITY_COLOR: Record<string, string> = {
   LEGENDARY: "text-foil-light",
 };
 
+// Cuánto dura la explosión de confeti antes de mostrar qué se ganó.
+const PRIZE_BURST_MS = 1900;
+
 function RevealArt({
   imageUrl,
   ringLegendary,
@@ -71,22 +74,41 @@ export function RewardReveal({
   special,
 }: Props) {
   const hasReveal = !!sticker || !!special;
-  const [count, setCount] = useState(hasReveal ? 3 : 0);
+  const prizeWon = prizeUnlocked || (special?.prizeUnlocked ?? false);
   const isRare =
     (sticker && ["RARE", "EPIC", "LEGENDARY"].includes(sticker.rarity)) ||
     !!special;
 
-  useEffect(() => {
-    if (count === 0) return;
-    const timer = setTimeout(() => setCount((c) => c - 1), 700);
-    return () => clearTimeout(timer);
-  }, [count]);
+  // countdown -> (si cae premio) prizeBurst -> reveal
+  const [phase, setPhase] = useState<"countdown" | "prizeBurst" | "reveal">(
+    hasReveal ? "countdown" : "reveal",
+  );
+  const [count, setCount] = useState(hasReveal ? 3 : 0);
 
   useEffect(() => {
-    if (count === 0 && hasReveal && "vibrate" in navigator) {
+    if (phase !== "countdown") return;
+    if (count === 0) {
+      setPhase(prizeWon ? "prizeBurst" : "reveal");
+      return;
+    }
+    const timer = setTimeout(() => setCount((c) => c - 1), 700);
+    return () => clearTimeout(timer);
+  }, [phase, count, prizeWon]);
+
+  useEffect(() => {
+    if (phase !== "prizeBurst") return;
+    const timer = setTimeout(() => setPhase("reveal"), PRIZE_BURST_MS);
+    return () => clearTimeout(timer);
+  }, [phase]);
+
+  useEffect(() => {
+    if (!("vibrate" in navigator)) return;
+    if (phase === "prizeBurst") {
+      navigator.vibrate([40, 80, 40, 80, 160]);
+    } else if (phase === "reveal" && !prizeWon && hasReveal) {
       navigator.vibrate(isRare ? [40, 60, 90] : 40);
     }
-  }, [count, isRare, hasReveal]);
+  }, [phase, prizeWon, isRare, hasReveal]);
 
   // Nada nuevo esta vez: álbum completo y no cayó ningún especial.
   if (!hasReveal) {
@@ -113,7 +135,7 @@ export function RewardReveal({
     );
   }
 
-  if (count > 0) {
+  if (phase === "countdown") {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center bg-jade-900 text-white">
         <p className="text-sm font-bold uppercase tracking-[0.2em] text-white/50">
@@ -129,9 +151,24 @@ export function RewardReveal({
     );
   }
 
+  // Explosión de confeti a pantalla completa, sin revelar todavía qué cayó.
+  if (phase === "prizeBurst") {
+    return (
+      <main className="relative flex min-h-screen flex-col items-center justify-center overflow-hidden bg-jade-900 px-6 text-center text-white">
+        <ConfettiBurst count={36} />
+        <p className="animate-pop-in font-display text-4xl font-black text-foil-light">
+          🎉
+        </p>
+        <p className="mt-3 animate-tear-in font-display text-2xl font-extrabold">
+          ¡GANASTE UN PREMIO!
+        </p>
+      </main>
+    );
+  }
+
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center gap-4 bg-jade-900 px-6 py-10 text-center text-white">
-      {isRare && <ConfettiBurst />}
+    <main className="relative flex min-h-screen flex-col items-center justify-center gap-4 overflow-hidden bg-jade-900 px-6 py-10 text-center text-white">
+      {isRare && !prizeWon && <ConfettiBurst count={18} />}
 
       <p className="animate-tear-in font-display text-2xl font-extrabold">
         ¡LO CONSEGUISTE!
@@ -207,20 +244,42 @@ export function RewardReveal({
   );
 }
 
-function ConfettiBurst() {
-  const pieces = Array.from({ length: 18 });
+function ConfettiBurst({ count = 18 }: { count?: number }) {
+  const colors = ["#e5511a", "#146356", "#c89b3c", "#e23e77", "#ffdfc7"];
+
+  // Las posiciones se generan solo en el cliente (useEffect) para evitar un
+  // mismatch de hidratación: Math.random() durante el render de SSR
+  // produciría un HTML distinto al que arma el cliente al hidratar.
+  const [pieces, setPieces] = useState<
+    { left: number; delay: number; duration: number; size: number; color: string }[]
+  >([]);
+
+  useEffect(() => {
+    setPieces(
+      Array.from({ length: count }, (_, i) => ({
+        left: Math.random() * 100,
+        delay: Math.random() * 500,
+        duration: 1.2 + Math.random() * 0.9,
+        size: 6 + Math.round(Math.random() * 6),
+        color: colors[i % colors.length]!,
+      })),
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [count]);
+
   return (
-    <div className="pointer-events-none fixed inset-0 overflow-hidden">
-      {pieces.map((_, i) => (
+    <div className="pointer-events-none absolute inset-0 overflow-hidden">
+      {pieces.map((p, i) => (
         <span
           key={i}
-          className="absolute top-1/4 h-2 w-2 animate-pop-in rounded-sm"
+          className="absolute -top-4 animate-confetti-fall rounded-sm"
           style={{
-            left: `${(i / pieces.length) * 100}%`,
-            backgroundColor: ["#e5511a", "#146356", "#c89b3c", "#e23e77"][
-              i % 4
-            ],
-            animationDelay: `${i * 30}ms`,
+            left: `${p.left}%`,
+            width: p.size,
+            height: p.size,
+            backgroundColor: p.color,
+            animationDelay: `${p.delay}ms`,
+            animationDuration: `${p.duration}s`,
           }}
         />
       ))}
