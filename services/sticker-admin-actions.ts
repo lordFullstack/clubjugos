@@ -11,10 +11,10 @@ const MAX_BYTES = 5 * 1024 * 1024;
 const stickerSchema = z
   .object({
     name: z.string().trim().min(1, "Ingresa un nombre").max(60),
-    description: z.string().trim().max(300).optional(),
+    description: z.string().trim().max(300).nullish(),
     rarity: z.enum(["COMMON", "UNCOMMON", "RARE", "EPIC", "LEGENDARY"]),
     kind: z.enum(["COLLECTIBLE", "SPECIAL"]),
-    specialPrizeId: z.string().trim().optional(),
+    specialPrizeId: z.string().trim().nullish(),
     currentImageUrl: z.string().trim().optional(),
     // Coleccionable: se ignora (sorteo sin repetición). Especial: tasa de
     // caída real en %, evaluada de forma independiente en cada escaneo.
