@@ -191,9 +191,12 @@ export function StickerForm({
           min={0.01}
           max={100}
           defaultValue={sticker?.probability ?? (kind === "SPECIAL" ? 2 : 1)}
-          disabled={kind === "COLLECTIBLE"}
+          readOnly={kind === "COLLECTIBLE"}
+          tabIndex={kind === "COLLECTIBLE" ? -1 : 0}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm disabled:bg-ink-900/5 disabled:text-ink-500"
+          className={`mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm ${
+            kind === "COLLECTIBLE" ? "pointer-events-none bg-ink-900/5 text-ink-500" : ""
+          }`}
         />
         {kind === "SPECIAL" ? (
           <span className="mt-1 block text-xs font-normal text-ink-500">
