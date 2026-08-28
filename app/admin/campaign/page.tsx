@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAdminSession } from "@/lib/admin/get-admin-session";
 import { getCampaigns } from "@/services/campaign-service";
 import { CampaignForm } from "@/components/admin/campaign-form";
 
@@ -11,26 +11,17 @@ const STATUS_LABEL: Record<string, string> = {
 };
 
 export default async function AdminCampaignPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, business_id")
-    .eq("id", user!.id)
-    .single();
+  const result = await getAdminSession();
 
   // Defensa en profundidad: aunque el menú lo oculte, un OPERATOR no puede
-  // gestionar campañas navegando directo a esta URL.
-  if (profile?.role !== "ADMIN") {
+  // gestionar campañas navegando directo a esta URL. (El layout ya validó
+  // la sesión, así que aquí solo falta el chequeo de rol específico.)
+  if (result.status !== "ok" || result.session.role !== "ADMIN") {
     redirect("/admin");
   }
 
-  const campaigns = profile.business_id
-    ? await getCampaigns(profile.business_id)
-    : [];
+  const { businessId } = result.session;
+  const campaigns = businessId ? await getCampaigns(businessId) : [];
   const active = campaigns.find((c) => c.status === "active") ?? null;
   const others = campaigns.filter((c) => c.id !== active?.id);
 

@@ -1,8 +1,10 @@
 import { getAdminKpis, getRecentActivity } from "@/services/admin-service";
 
 export default async function AdminDashboardPage() {
-  const kpis = await getAdminKpis();
-  const activity = await getRecentActivity();
+  const [kpis, activity] = await Promise.all([
+    getAdminKpis(),
+    getRecentActivity(),
+  ]);
 
   const cards = [
     { label: "Clientes registrados", value: kpis?.total_customers ?? 0 },

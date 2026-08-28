@@ -1,5 +1,5 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAdminSession } from "@/lib/admin/get-admin-session";
 import { AdminShell } from "@/components/admin/admin-shell";
 
 export default async function AdminLayout({
@@ -7,30 +7,21 @@ export default async function AdminLayout({
 }: {
   children: React.ReactNode;
 }) {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const result = await getAdminSession();
 
-  if (!user) {
+  if (result.status === "unauthenticated") {
     redirect("/login");
   }
-
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, name")
-    .eq("id", user.id)
-    .single();
 
   // Un cliente que intenta entrar a /admin se manda de vuelta a su propia
   // app. Nunca se muestra un error técnico de permisos: simplemente no
   // existe esa puerta para él.
-  if (!profile || (profile.role !== "ADMIN" && profile.role !== "OPERATOR")) {
+  if (result.status === "unauthorized") {
     redirect("/home");
   }
 
   return (
-    <AdminShell role={profile.role} name={profile.name}>
+    <AdminShell role={result.session.role} name={result.session.name}>
       {children}
     </AdminShell>
   );

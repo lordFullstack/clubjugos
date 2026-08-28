@@ -1,38 +1,35 @@
 import { redirect } from "next/navigation";
+import { getAdminSession } from "@/lib/admin/get-admin-session";
 import { createClient } from "@/lib/supabase/server";
 import { getCampaignStickers } from "@/services/sticker-admin-service";
 import { getBusinessPrizes } from "@/services/prize-admin-service";
 import { StickerList } from "@/components/admin/sticker-list";
 
 export default async function AdminStickersPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const result = await getAdminSession();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, business_id")
-    .eq("id", user!.id)
-    .single();
-
-  if (profile?.role !== "ADMIN") {
+  if (result.status !== "ok" || result.session.role !== "ADMIN") {
     redirect("/admin");
   }
 
-  const { data: campaign } = profile.business_id
-    ? await supabase
-        .from("campaigns")
-        .select("id")
-        .eq("business_id", profile.business_id)
-        .eq("status", "active")
-        .maybeSingle()
-    : { data: null };
+  const { businessId } = result.session;
+  const supabase = await createClient();
+
+  // La campaña activa y los premios del negocio no dependen uno del otro:
+  // se piden en paralelo en vez de esperar uno para empezar el siguiente.
+  const [{ data: campaign }, prizes] = await Promise.all([
+    businessId
+      ? supabase
+          .from("campaigns")
+          .select("id")
+          .eq("business_id", businessId)
+          .eq("status", "active")
+          .maybeSingle()
+      : Promise.resolve({ data: null }),
+    businessId ? getBusinessPrizes(businessId) : Promise.resolve([]),
+  ]);
 
   const stickers = campaign ? await getCampaignStickers(campaign.id) : [];
-  const prizes = profile.business_id
-    ? await getBusinessPrizes(profile.business_id)
-    : [];
 
   return (
     <div>

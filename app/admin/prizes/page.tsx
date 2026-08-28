@@ -1,27 +1,17 @@
 import { redirect } from "next/navigation";
-import { createClient } from "@/lib/supabase/server";
+import { getAdminSession } from "@/lib/admin/get-admin-session";
 import { getBusinessPrizes } from "@/services/prize-admin-service";
 import { PrizeList } from "@/components/admin/prize-list";
 
 export default async function AdminPrizesPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const result = await getAdminSession();
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("role, business_id")
-    .eq("id", user!.id)
-    .single();
-
-  if (profile?.role !== "ADMIN") {
+  if (result.status !== "ok" || result.session.role !== "ADMIN") {
     redirect("/admin");
   }
 
-  const prizes = profile.business_id
-    ? await getBusinessPrizes(profile.business_id)
-    : [];
+  const { businessId } = result.session;
+  const prizes = businessId ? await getBusinessPrizes(businessId) : [];
 
   return (
     <div>

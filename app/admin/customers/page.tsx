@@ -1,21 +1,11 @@
-import { createClient } from "@/lib/supabase/server";
+import { getAdminSession } from "@/lib/admin/get-admin-session";
 import { getBusinessCustomers } from "@/services/admin-service";
 
 export default async function AdminCustomersPage() {
-  const supabase = await createClient();
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  const result = await getAdminSession();
+  const businessId = result.status === "ok" ? result.session.businessId : null;
 
-  const { data: profile } = await supabase
-    .from("profiles")
-    .select("business_id")
-    .eq("id", user!.id)
-    .single();
-
-  const customers = profile?.business_id
-    ? await getBusinessCustomers(profile.business_id)
-    : [];
+  const customers = businessId ? await getBusinessCustomers(businessId) : [];
 
   return (
     <div>

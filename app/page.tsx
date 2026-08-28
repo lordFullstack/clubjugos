@@ -43,7 +43,14 @@ export default function LandingPage() {
                 className="flex h-14 w-14 animate-pop-in items-center justify-center rounded-2xl bg-paper-100 p-1.5 ring-2 ring-ink-900/5"
                 style={{ animationDelay: `${i * 90}ms` }}
               >
-                <Image src={src} alt="" width={44} height={44} className="object-contain" />
+                <Image
+                  src={src}
+                  alt=""
+                  width={44}
+                  height={44}
+                  className="object-contain"
+                  priority={i < 4}
+                />
               </div>
             ))}
           </div>
