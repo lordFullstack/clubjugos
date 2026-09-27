@@ -5,8 +5,13 @@ export type AdminKpis = {
   total_scans: number;
   stickers_delivered: number;
   stickers_duplicated: number;
+  // LOOP 07 (migración 016): faltaban para los 5 KPIs que pide el spec del
+  // dashboard (escaneos, stickers entregados, especiales entregados,
+  // premios disponibles, redenciones).
+  specials_delivered: number;
   completed_collections: number;
   prizes_unlocked: number;
+  prizes_available: number;
   prizes_redeemed: number;
   active_customers_7d: number;
 };

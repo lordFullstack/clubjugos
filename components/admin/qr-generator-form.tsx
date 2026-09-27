@@ -44,6 +44,22 @@ export function QrGeneratorForm() {
     });
   }
 
+  // LOOP 07: "separar generar / descargar/imprimir" — antes solo se podía
+  // generar y mirar el QR en el modal, sin forma de llevárselo.
+  function handleDownload() {
+    if (!item) return;
+    const a = document.createElement("a");
+    a.href = item.imageDataUrl;
+    a.download = `qr-${item.token}.png`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function handlePrint() {
+    window.print();
+  }
+
   return (
     <div className="mt-6 space-y-6">
       <div className="rounded-2xl bg-white p-5 shadow-card">
@@ -83,23 +99,41 @@ export function QrGeneratorForm() {
             className="w-full max-w-sm rounded-3xl bg-white p-6 text-center shadow-card"
             onClick={(e) => e.stopPropagation()}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
-              src={item.imageDataUrl}
-              alt={`QR ${item.token}`}
-              className="mx-auto h-72 w-72"
-            />
-            <p className="mt-4 break-all font-mono text-sm font-bold text-ink-900">
-              {item.token}
-            </p>
-            <p className="mt-1 text-xs text-ink-500">
-              Vence: {new Date(item.expiresAt).toLocaleString("es-CO")}
-            </p>
-            <p className="mt-2 inline-block rounded-full bg-citrus-100 px-3 py-1 text-xs font-bold text-citrus-700">
-              AVAILABLE
-            </p>
+            <div id="qr-print-area">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img
+                src={item.imageDataUrl}
+                alt={`QR ${item.token}`}
+                className="mx-auto h-72 w-72"
+              />
+              <p className="mt-4 break-all font-mono text-sm font-bold text-ink-900">
+                {item.token}
+              </p>
+              <p className="mt-1 text-xs text-ink-500">
+                Vence: {new Date(item.expiresAt).toLocaleString("es-CO")}
+              </p>
+              <p className="mt-2 inline-block rounded-full bg-citrus-100 px-3 py-1 text-xs font-bold text-citrus-700">
+                AVAILABLE
+              </p>
+            </div>
 
             <div className="mt-5 flex gap-3">
+              <button
+                type="button"
+                onClick={handleDownload}
+                className="flex-1 rounded-xl border border-black/10 py-3 text-sm font-bold text-ink-700 transition active:scale-[0.98]"
+              >
+                DESCARGAR
+              </button>
+              <button
+                type="button"
+                onClick={handlePrint}
+                className="flex-1 rounded-xl border border-black/10 py-3 text-sm font-bold text-ink-700 transition active:scale-[0.98]"
+              >
+                IMPRIMIR
+              </button>
+            </div>
+            <div className="mt-3 flex gap-3">
               <button
                 type="button"
                 onClick={() => setItem(null)}

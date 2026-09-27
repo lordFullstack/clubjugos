@@ -6,14 +6,20 @@ export default async function AdminDashboardPage() {
     getRecentActivity(),
   ]);
 
+  // LOOP 07: los primeros 5 son exactamente los que pide el spec del
+  // dashboard (escaneos, stickers entregados, especiales entregados,
+  // premios disponibles, redenciones). El resto ya existían y se
+  // mantienen, pero después de esos cinco en vez de mezclados.
   const cards = [
-    { label: "Clientes registrados", value: kpis?.total_customers ?? 0 },
     { label: "Escaneos exitosos", value: kpis?.total_scans ?? 0 },
     { label: "Stickers entregados", value: kpis?.stickers_delivered ?? 0 },
+    { label: "Especiales entregados", value: kpis?.specials_delivered ?? 0 },
+    { label: "Premios disponibles", value: kpis?.prizes_available ?? 0 },
+    { label: "Redenciones", value: kpis?.prizes_redeemed ?? 0 },
+    { label: "Clientes registrados", value: kpis?.total_customers ?? 0 },
     { label: "Stickers repetidos", value: kpis?.stickers_duplicated ?? 0 },
     { label: "Colecciones completadas", value: kpis?.completed_collections ?? 0 },
-    { label: "Premios desbloqueados", value: kpis?.prizes_unlocked ?? 0 },
-    { label: "Premios canjeados", value: kpis?.prizes_redeemed ?? 0 },
+    { label: "Premios desbloqueados (histórico)", value: kpis?.prizes_unlocked ?? 0 },
     { label: "Activos últimos 7 días", value: kpis?.active_customers_7d ?? 0 },
   ];
 

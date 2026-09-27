@@ -5,6 +5,7 @@ import Image from "next/image";
 import { saveSticker, type StickerFormState } from "@/services/sticker-admin-actions";
 import type { StickerRow } from "@/services/sticker-admin-service";
 import type { AdminPrizeRow } from "@/services/prize-admin-service";
+import { StickerTile } from "@/components/sticker-tile";
 
 const initialState: StickerFormState = {};
 
@@ -28,6 +29,11 @@ export function StickerForm({
     sticker?.kind ?? "COLLECTIBLE",
   );
   const [preview, setPreview] = useState<string | null>(sticker?.imageUrl ?? null);
+  // LOOP 07: para el preview "real" en tamaño móvil, nombre y rareza pasan
+  // de defaultValue (no controlado) a estado — así el preview se actualiza
+  // mientras el admin escribe, no solo al elegir la imagen.
+  const [name, setName] = useState(sticker?.name ?? "");
+  const [rarity, setRarity] = useState(sticker?.rarity ?? "COMMON");
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
@@ -92,11 +98,34 @@ export function StickerForm({
         Nombre
         <input
           name="name"
-          defaultValue={sticker?.name}
+          value={name}
+          onChange={(e) => setName(e.target.value)}
           required
           className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
         />
       </label>
+
+      <div className="col-span-2 flex items-center gap-3 rounded-2xl bg-paper-50 p-4">
+        <StickerTile
+          sticker={{
+            id: "preview",
+            name: name || "Sticker sin nombre",
+            image_url: preview,
+            rarity,
+            obtained: true,
+            duplicateCount: 0,
+          }}
+          size="md"
+        />
+        <div className="min-w-0">
+          <p className="text-xs font-bold uppercase tracking-wide text-ink-500">
+            Así se ve en el álbum (tamaño real móvil)
+          </p>
+          <p className="mt-0.5 truncate text-sm font-semibold text-ink-900">
+            {name || "Sticker sin nombre"}
+          </p>
+        </div>
+      </div>
 
       <div className="col-span-2">
         <p className="text-sm font-semibold text-ink-700">Tipo</p>
@@ -161,7 +190,8 @@ export function StickerForm({
         Rareza
         <select
           name="rarity"
-          defaultValue={sticker?.rarity ?? "COMMON"}
+          value={rarity}
+          onChange={(e) => setRarity(e.target.value)}
           className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
         >
           {RARITIES.map((r) => (

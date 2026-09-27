@@ -97,3 +97,23 @@ body {
     scroll-behavior: auto !important;
   }
 }
+
+/* LOOP 07 (admin): "imprimir" en el generador de QR — solo se imprime el
+   propio código, no el resto del backoffice (nav, formulario, etc). */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #qr-print-area,
+  #qr-print-area * {
+    visibility: visible;
+  }
+  #qr-print-area {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+}

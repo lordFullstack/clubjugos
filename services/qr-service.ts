@@ -83,3 +83,77 @@ export async function adminGenerateQrTokens(
     tokens: rows.map((r) => ({ token: r.token, expiresAt: r.expires_at })),
   };
 }
+
+export type QrTokenStatus = "AVAILABLE" | "USED" | "EXPIRED" | "CANCELLED";
+
+export type QrTokenRow = {
+  token: string;
+  /** Estado real en la base. Ver `displayStatus` para lo que se muestra. */
+  status: QrTokenStatus;
+  /**
+   * `qr_tokens.status` solo pasa a EXPIRED cuando alguien intenta usarlo
+   * (ver migración 008/014, sección del QR vencido). Un token que nadie
+   * escaneó nunca se actualiza solo, así que acá calculamos el estado que
+   * el admin realmente necesita ver: si ya pasó `expiresAt`, se muestra
+   * como expirado aunque la fila todavía diga AVAILABLE. Es solo de
+   * lectura — no escribe nada, no le miente al admin sobre lo que hay en
+   * la base, solo interpreta correctamente lo que ya está.
+   */
+  displayStatus: QrTokenStatus;
+  expiresAt: string;
+  usedAt: string | null;
+  createdAt: string;
+};
+
+/**
+ * LOOP 07 — lista de QR recientes del negocio, con su estado (disponible /
+ * usado / expirado / cancelado), para la sección "estado" que pide el
+ * pack. `qr_tokens` no tiene ninguna policy de RLS para anon/authenticated
+ * (a propósito, ver migración 004): por eso esta lectura hace su propio
+ * chequeo de rol antes de usar el cliente de service_role, igual que ya
+ * hace `adminGenerateQrTokens`.
+ */
+export async function getRecentQrTokens(limit = 30): Promise<QrTokenRow[]> {
+  const supabase = await createClient();
+  const {
+    data: { user },
+  } = await supabase.auth.getUser();
+  if (!user) return [];
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("role, business_id")
+    .eq("id", user.id)
+    .single();
+
+  if (
+    !profile ||
+    (profile.role !== "ADMIN" && profile.role !== "OPERATOR") ||
+    !profile.business_id
+  ) {
+    return [];
+  }
+
+  const serviceClient = createServiceClient();
+  const { data } = await serviceClient
+    .from("qr_tokens")
+    .select("token, status, expires_at, used_at, created_at")
+    .eq("business_id", profile.business_id)
+    .order("created_at", { ascending: false })
+    .limit(limit);
+
+  const now = Date.now();
+
+  return (data ?? []).map((row) => {
+    const status = row.status as QrTokenStatus;
+    const isStaleUnused = status === "AVAILABLE" && new Date(row.expires_at).getTime() < now;
+    return {
+      token: row.token,
+      status,
+      displayStatus: isStaleUnused ? "EXPIRED" : status,
+      expiresAt: row.expires_at,
+      usedAt: row.used_at,
+      createdAt: row.created_at,
+    };
+  });
+}
