@@ -8,7 +8,6 @@ import {
   getCustomerPrizes,
   getLastObtainedSticker,
 } from "@/services/customer-service";
-import { StickerGrid } from "@/components/sticker-grid";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
@@ -39,7 +38,7 @@ export default async function HomePage() {
   const profile = await getCustomerProfile(user.id);
   const businessId = profile?.business_id ?? null;
 
-  const [{ campaign, stickers, obtainedCount }, prizes, lastSticker] =
+  const [{ campaign, obtainedCount }, prizes, lastSticker] =
     await Promise.all([
       getCurrentCollection(businessId, user.id),
       getCustomerPrizes(businessId, user.id),
@@ -62,6 +61,12 @@ export default async function HomePage() {
         </h1>
       </header>
 
+      {/* UI PACK LOOP 02: orden saludo -> progreso -> CTA -> stickers
+          recientes -> siguiente objetivo -> navegación. La card de
+          progreso ahora es solo eso (progreso): el mini-grid de stickers
+          que tenía antes se sacó por redundar con Álbum (no está en el
+          mockup de Home tampoco), y "próximo objetivo" pasa a ser su
+          propia sección más abajo. */}
       <section className="mt-6">
         {campaign ? (
           <TicketCard className="px-5 pb-5">
@@ -70,15 +75,11 @@ export default async function HomePage() {
                 <p className="text-xs font-bold uppercase tracking-wide text-citrus-500">
                   Colección activa
                 </p>
-                <h2 className="mt-0.5 font-display text-lg font-extrabold text-ink-900">
+                <h2 className="mt-0.5 font-display text-base font-bold text-ink-700">
                   {campaign.name}
                 </h2>
               </div>
               <StampBadge>{progressPct}%</StampBadge>
-            </div>
-
-            <div className="mt-4">
-              <StickerGrid stickers={stickers} size="sm" />
             </div>
 
             <TicketDivider className="mt-4 pt-4">
@@ -89,9 +90,6 @@ export default async function HomePage() {
                 <span className="font-semibold text-ink-500">stickers</span>
               </div>
               <ProgressBar percent={progressPct} />
-              <p className="mt-2 text-xs font-semibold text-jade-600">
-                {nextGoalText(Math.max(target - obtainedCount, 0))}
-              </p>
             </TicketDivider>
           </TicketCard>
         ) : (
@@ -135,6 +133,15 @@ export default async function HomePage() {
               <RarityBadge rarity={lastSticker.rarity} className="mt-1" />
             </div>
           </TicketCard>
+        </section>
+      )}
+
+      {campaign && (
+        <section className="mt-6 flex items-center gap-3 rounded-2xl bg-jade-50 px-4 py-3.5 text-jade-700">
+          <IconAlbum className="h-5 w-5 shrink-0" strokeWidth={1.8} />
+          <p className="text-sm font-semibold">
+            {nextGoalText(Math.max(target - obtainedCount, 0))}
+          </p>
         </section>
       )}
 

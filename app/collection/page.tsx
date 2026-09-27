@@ -84,36 +84,33 @@ export default async function CollectionPage() {
             ⚡ Especiales ganados
           </h2>
           <TicketCard className="mt-3 px-5 pb-5" tone="jade">
-            <ul className="space-y-2">
+            <div className="grid grid-cols-4 gap-3">
               {specialWins.map((win) => (
-                <li
-                  key={win.id}
-                  className="flex items-center gap-3 rounded-2xl bg-white/10 px-3 py-2.5"
-                >
-                  <div className="flex h-9 w-9 shrink-0 items-center justify-center overflow-hidden rounded-full bg-white/10">
+                <div key={win.id} className="flex flex-col items-center gap-1">
+                  <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-white/10 ring-2 ring-foil-light/50 shadow-card">
                     {win.image_url ? (
                       <Image
                         src={win.image_url}
-                        alt=""
-                        width={36}
-                        height={36}
+                        alt={win.name}
+                        width={48}
+                        height={48}
                         className="object-contain"
                       />
                     ) : (
-                      <IconGift className="h-5 w-5 text-foil-light" strokeWidth={1.6} />
+                      <IconGift className="h-8 w-8 text-foil-light" strokeWidth={1.6} />
                     )}
                   </div>
-                  <span className="flex-1 truncate font-semibold text-white">
+                  <span className="max-w-full truncate text-center text-xs font-semibold text-white">
                     {win.name}
                   </span>
                   {win.count > 1 && (
-                    <span className="rounded-full bg-white/15 px-2 py-0.5 font-mono text-xs font-bold text-foil-light">
+                    <span className="rounded-full bg-white/15 px-1.5 font-mono text-[10px] font-bold text-foil-light">
                       x{win.count}
                     </span>
                   )}
-                </li>
+                </div>
               ))}
-            </ul>
+            </div>
           </TicketCard>
         </section>
       )}
