@@ -104,6 +104,19 @@ export function StickerRevealModal({
       className="max-w-sm"
     >
       <TicketCard tone="jade" className="px-6 pb-6 text-center">
+        {/* UI LOOP 04: cierre explícito además de ESC/backdrop/back — el
+            spec pide una "X" visible, no solo gestos implícitos. Mismo
+            handleClose que ya usa "CONTINUAR": nunca le cuesta la
+            recompensa al cliente, ya quedó otorgada en el servidor. */}
+        <button
+          type="button"
+          onClick={handleClose}
+          aria-label="Cerrar"
+          className="absolute right-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-white/80 transition hover:bg-white/20 hover:text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          <CloseIcon className="h-4 w-4" strokeWidth={2.2} />
+        </button>
+
         {!hasReveal ? (
           <NoLuckContent onClose={handleClose} />
         ) : (
@@ -160,6 +173,21 @@ export function StickerRevealModal({
         )}
       </TicketCard>
     </Modal>
+  );
+}
+
+function CloseIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M6 6l12 12M18 6 6 18" />
+    </svg>
   );
 }
 
@@ -248,9 +276,21 @@ function SpecialBlock({
   return (
     <div className="relative mt-4 w-full rounded-3xl border-2 border-dashed border-foil-light bg-white/10 p-5">
       {!reducedMotion && <ConfettiBurst count={12} />}
-      <p className="text-xs font-bold uppercase tracking-[0.2em] text-foil-light">
-        {special.isDuplicate ? "⚡ Especial · DUPLICADO" : "⚡ Premio especial"}
-      </p>
+      {/* UI LOOP 04: "badge ESPECIAL" propio en vez de texto suelto — mismo
+          tratamiento de píldora que ya usa "Estado: Disponible" más abajo,
+          para que ESPECIAL y DUPLICADO se lean como badges reales. El
+          sorteo especial es el único que puede repetirse (el coleccionable
+          nunca sale duplicado — se sortea solo entre los que faltan). */}
+      <div className="flex items-center justify-center gap-1.5">
+        <span className="inline-flex items-center gap-1 rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-foil-light">
+          ⚡ Especial
+        </span>
+        {special.isDuplicate && (
+          <span className="inline-flex items-center rounded-full bg-white/10 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-white/70">
+            Duplicado
+          </span>
+        )}
+      </div>
       <div className="mt-2 flex items-center justify-center gap-3">
         <div
           className={`foil-shine play relative flex h-14 w-14 items-center justify-center overflow-hidden rounded-2xl bg-white/10 ${
