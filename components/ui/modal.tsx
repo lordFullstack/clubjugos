@@ -17,6 +17,10 @@ import { useEffect, useRef, type ReactNode } from "react";
  * - No impone animación propia: el consumidor decide (para respetar
  *   `prefers-reduced-motion`, se recomienda condicionar la clase de entrada
  *   con la media query en vez de animar siempre).
+ * - No impone fondo/sombra propios (a propósito, para que dos utilities de
+ *   Tailwind con la misma propiedad no compitan por orden de generación):
+ *   `className` debe traer su propio `bg-*`/`shadow-*` — ver
+ *   `sticker-reveal-modal.tsx` para un ejemplo con `<TicketCard>`.
  */
 export function Modal({
   open,
@@ -72,7 +76,7 @@ export function Modal({
         aria-label={title}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className={`w-full max-w-sm rounded-3xl bg-white shadow-card outline-none ${className}`}
+        className={`w-full max-w-sm rounded-3xl outline-none ${className}`}
       >
         {children}
       </div>

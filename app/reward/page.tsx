@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
-import { RewardReveal } from "@/components/reward-reveal";
+import { StickerRevealModal } from "@/components/sticker-reveal-modal";
 
 export default async function RewardPage({
   searchParams,
@@ -38,7 +38,7 @@ export default async function RewardPage({
   }
 
   return (
-    <RewardReveal
+    <StickerRevealModal
       sticker={
         params.name
           ? {

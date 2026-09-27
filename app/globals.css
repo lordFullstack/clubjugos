@@ -82,3 +82,18 @@ body {
 .foil-shine.play::after {
   animation: shine 1.4s ease-in-out;
 }
+
+/* LOOP 03: accesibilidad — con prefers-reduced-motion, ninguna animación
+   decorativa del sistema debe reproducirse (afecta pop-in, shine, confetti,
+   stamp-in, tear-in, reveal-pop y cualquier futura que use estas keyframes).
+   El contenido debe quedar directamente en su estado final. */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}

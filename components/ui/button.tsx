@@ -1,7 +1,7 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "ghost";
+export type ButtonVariant = "primary" | "secondary" | "outline" | "outline-invert" | "ghost";
 export type ButtonSize = "md" | "sm";
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
@@ -9,6 +9,10 @@ const VARIANT_CLASS: Record<ButtonVariant, string> = {
     "bg-gradient-to-b from-citrus-400 to-citrus-600 text-white shadow-soft",
   secondary: "border-2 border-ink-900/[0.06] bg-white text-ink-700 shadow-card",
   outline: "border border-ink-900/10 text-ink-700",
+  // Mismo rol que "outline" pero para usar sobre fondos oscuros (ej. la
+  // card jade del modal de revelación) sin pisar sus propias clases de
+  // borde/texto con un className suelto.
+  "outline-invert": "border border-white/20 text-white",
   ghost: "bg-citrus-500 text-white",
 };
 
