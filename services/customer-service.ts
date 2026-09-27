@@ -231,6 +231,9 @@ export type PrizeView = {
   required_stickers: number;
   status: PrizeStatus;
   customerPrizeId: string | null;
+  earnedAt: string | null;
+  expiresAt: string | null;
+  redeemedAt: string | null;
 };
 
 /**
@@ -254,10 +257,22 @@ export async function getCustomerPrizes(
 
   const { data: customerPrizes } = await supabase
     .from("customer_prizes")
-    .select("id, prize_id, status");
+    .select("id, prize_id, status, earned_at, expires_at, redeemed_at");
 
-  const byPrizeId = new Map<string, { id: string; status: string }>(
-    (customerPrizes ?? []).map((cp) => [cp.prize_id, { id: cp.id, status: cp.status }]),
+  const byPrizeId = new Map<
+    string,
+    { id: string; status: string; earned_at: string; expires_at: string | null; redeemed_at: string | null }
+  >(
+    (customerPrizes ?? []).map((cp) => [
+      cp.prize_id,
+      {
+        id: cp.id,
+        status: cp.status,
+        earned_at: cp.earned_at,
+        expires_at: cp.expires_at,
+        redeemed_at: cp.redeemed_at,
+      },
+    ]),
   );
 
   return (prizes ?? []).map((prize) => {
@@ -266,6 +281,9 @@ export async function getCustomerPrizes(
       ...prize,
       status: (cp?.status as PrizeStatus) ?? "LOCKED",
       customerPrizeId: cp?.id ?? null,
+      earnedAt: cp?.earned_at ?? null,
+      expiresAt: cp?.expires_at ?? null,
+      redeemedAt: cp?.redeemed_at ?? null,
     };
   });
 }

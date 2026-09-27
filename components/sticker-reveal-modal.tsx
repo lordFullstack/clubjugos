@@ -84,7 +84,17 @@ export function StickerRevealModal({
   }
 
   const primaryHref = anyPrizeUnlocked ? "/prizes" : "/collection";
-  const primaryLabel = anyPrizeUnlocked ? "VER PREMIO" : "VER MI ÁLBUM";
+  const primaryLabel = anyPrizeUnlocked ? "VER MIS PREMIOS" : "VER MI ÁLBUM";
+
+  // LOOP 05: cuando el especial trae premio, ese es el titular del modal
+  // ("¡PREMIO ESPECIAL!"), por encima incluso de un coleccionable nuevo en
+  // el mismo escaneo. Un especial repetido (sin premio nuevo) mantiene el
+  // encabezado genérico de LOOP 03.
+  const headline = special?.prizeUnlocked
+    ? "¡PREMIO ESPECIAL!"
+    : !sticker && special
+      ? "¡TE SALIÓ UN ESPECIAL!"
+      : "¡LO CONSEGUISTE!";
 
   return (
     <Modal
@@ -103,7 +113,7 @@ export function StickerRevealModal({
                 reducedMotion ? "" : "animate-tear-in"
               }`}
             >
-              {!sticker && special ? "¡TE SALIÓ UN ESPECIAL!" : "¡LO CONSEGUISTE!"}
+              {headline}
             </p>
 
             {sticker && (
@@ -267,10 +277,15 @@ function SpecialBlock({
         </p>
       )}
       {special.prizeUnlocked && special.prizeName && (
-        <p className="mt-2 flex items-center justify-center gap-2 text-sm font-bold text-foil-light">
-          <IconGift className="h-5 w-5 shrink-0" strokeWidth={1.8} />
-          ¡Ganaste: {special.prizeName}!
-        </p>
+        <>
+          <p className="mt-2 flex items-center justify-center gap-2 text-sm font-bold text-foil-light">
+            <IconGift className="h-5 w-5 shrink-0" strokeWidth={1.8} />
+            ¡Ganaste: {special.prizeName}!
+          </p>
+          <span className="mt-2 inline-block rounded-full bg-white/15 px-2.5 py-1 text-[11px] font-bold uppercase tracking-wide text-foil-light">
+            Estado: Disponible
+          </span>
+        </>
       )}
     </div>
   );
