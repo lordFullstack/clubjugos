@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { QrScanner } from "@/components/qr-scanner";
+import { Toast } from "@/components/ui/toast";
 
 export default async function ScanPage({
   searchParams,
@@ -30,9 +31,9 @@ export default async function ScanPage({
       </div>
 
       {error && (
-        <p className="w-full max-w-sm rounded-2xl bg-red-500/15 px-4 py-3 text-sm font-medium text-red-200">
+        <Toast tone="dark" className="w-full max-w-sm">
           {error}
-        </p>
+        </Toast>
       )}
 
       <QrScanner />
