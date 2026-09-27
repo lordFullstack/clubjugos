@@ -111,6 +111,59 @@ export async function getCurrentCollection(
   };
 }
 
+export type LastObtainedSticker = {
+  name: string;
+  image_url: string | null;
+  rarity: string;
+  obtainedAt: string;
+};
+
+/**
+ * El sticker COLLECTIBLE más reciente que el cliente obtuvo en la campaña
+ * activa (para el bloque "último sticker obtenido" de Home — LOOP 04).
+ * Se filtra explícitamente por `customer_id` además de por RLS: es una
+ * lectura nueva, así que arranca ya con la defensa en profundidad que
+ * AUDIT.md pide agregar a las lecturas existentes en LOOP 08.
+ */
+export async function getLastObtainedSticker(
+  businessId: string | null,
+  customerId: string,
+): Promise<LastObtainedSticker | null> {
+  if (!businessId) return null;
+
+  const supabase = await createClient();
+
+  const { data: campaign } = await supabase
+    .from("campaigns")
+    .select("id")
+    .eq("business_id", businessId)
+    .eq("status", "active")
+    .maybeSingle();
+
+  if (!campaign) return null;
+
+  const { data } = await supabase
+    .from("customer_stickers")
+    .select("obtained_at, stickers!inner(name, image_url, rarity, kind)")
+    .eq("customer_id", customerId)
+    .eq("campaign_id", campaign.id)
+    .eq("stickers.kind", "COLLECTIBLE")
+    .order("obtained_at", { ascending: false })
+    .limit(1)
+    .maybeSingle();
+
+  if (!data) return null;
+  const sticker = Array.isArray(data.stickers) ? data.stickers[0] : data.stickers;
+  if (!sticker) return null;
+
+  return {
+    name: sticker.name,
+    image_url: sticker.image_url,
+    rarity: sticker.rarity,
+    obtainedAt: data.obtained_at,
+  };
+}
+
 export type SpecialWin = {
   id: string;
   name: string;

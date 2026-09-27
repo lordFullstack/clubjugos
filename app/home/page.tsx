@@ -1,16 +1,30 @@
+import Image from "next/image";
+import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
   getCustomerProfile,
   getCurrentCollection,
+  getCustomerPrizes,
+  getLastObtainedSticker,
 } from "@/services/customer-service";
 import { StickerGrid } from "@/components/sticker-grid";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
-import { IconJuiceCup, IconScan } from "@/components/icons";
+import { IconJuiceCup, IconScan, IconGift, IconAlbum } from "@/components/icons";
 import { Button } from "@/components/ui/button";
 import { EmptyState } from "@/components/ui/empty-state";
+import { RarityBadge } from "@/components/ui/rarity-badge";
+
+/** "Próximo objetivo": nunca decimos CUÁL sticker falta (el sorteo es
+ * aleatorio entre los pendientes, no hay un "siguiente" fijo) — solo
+ * cuántos, que es la única información real que tenemos. */
+function nextGoalText(remaining: number): string {
+  if (remaining <= 0) return "¡Tu álbum está completo! 🎉";
+  if (remaining === 1) return "¡Un sticker más y completas tu álbum!";
+  return `Te faltan ${remaining} stickers para completar tu álbum`;
+}
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -23,13 +37,19 @@ export default async function HomePage() {
   }
 
   const profile = await getCustomerProfile(user.id);
-  const { campaign, stickers, obtainedCount } = await getCurrentCollection(
-    profile?.business_id ?? null,
-  );
+  const businessId = profile?.business_id ?? null;
+
+  const [{ campaign, stickers, obtainedCount }, prizes, lastSticker] =
+    await Promise.all([
+      getCurrentCollection(businessId),
+      getCustomerPrizes(businessId),
+      getLastObtainedSticker(businessId, user.id),
+    ]);
 
   const firstName = (profile?.name ?? "amigo").split(" ")[0];
   const target = campaign?.completion_target ?? 0;
   const progressPct = target > 0 ? Math.round((obtainedCount / target) * 100) : 0;
+  const availablePrizeCount = prizes.filter((p) => p.status === "AVAILABLE").length;
 
   return (
     <main className="min-h-screen bg-paper-100 px-6 pb-32 pt-8">
@@ -69,6 +89,9 @@ export default async function HomePage() {
                 <span className="font-semibold text-ink-500">stickers</span>
               </div>
               <ProgressBar percent={progressPct} />
+              <p className="mt-2 text-xs font-semibold text-jade-600">
+                {nextGoalText(Math.max(target - obtainedCount, 0))}
+              </p>
             </TicketDivider>
           </TicketCard>
         ) : (
@@ -87,6 +110,46 @@ export default async function HomePage() {
         <IconScan className="h-5 w-5" strokeWidth={2.1} />
         ESCANEAR QR
       </Button>
+
+      {lastSticker && (
+        <section className="mt-6">
+          <h2 className="text-xs font-bold uppercase tracking-wide text-ink-500">
+            Último sticker obtenido
+          </h2>
+          <TicketCard className="mt-2 flex items-center gap-3 px-4 pb-4">
+            <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-2xl bg-paper-50">
+              {lastSticker.image_url ? (
+                <Image
+                  src={lastSticker.image_url}
+                  alt={lastSticker.name}
+                  width={56}
+                  height={56}
+                  className="object-contain"
+                />
+              ) : (
+                <IconAlbum className="h-8 w-8 text-citrus-300" strokeWidth={1.4} />
+              )}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="truncate font-bold text-ink-900">{lastSticker.name}</p>
+              <RarityBadge rarity={lastSticker.rarity} className="mt-1" />
+            </div>
+          </TicketCard>
+        </section>
+      )}
+
+      {availablePrizeCount > 0 && (
+        <Link
+          href="/prizes"
+          className="mt-4 flex items-center gap-3 rounded-2xl bg-gradient-to-b from-foil-light to-foil px-4 py-3.5 text-ink-900 shadow-card transition active:scale-[0.98]"
+        >
+          <IconGift className="h-6 w-6 shrink-0" strokeWidth={1.8} />
+          <span className="flex-1 text-sm font-bold">
+            Tenés {availablePrizeCount === 1 ? "un premio disponible" : `${availablePrizeCount} premios disponibles`}
+          </span>
+          <span className="text-xs font-bold uppercase tracking-wide">Ver →</span>
+        </Link>
+      )}
 
       <BottomNav />
     </main>
