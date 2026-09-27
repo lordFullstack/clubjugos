@@ -11,6 +11,30 @@ const STATUS_LABEL: Record<KnownStatus, { label: string; className: string }> = 
   LOCKED: { label: "Bloqueado", className: "bg-ink-900/5 text-ink-500" },
 };
 
+function formatDate(iso: string): string {
+  return new Date(iso).toLocaleDateString("es-CO", {
+    day: "numeric",
+    month: "short",
+  });
+}
+
+/**
+ * LOOP 05: línea de fecha/estado de la tarjeta de premio — solo se muestra
+ * cuando el modelo actual realmente tiene ese dato (`customer_prizes.expires_at`
+ * / `redeemed_at`); si el premio no tiene fecha de vencimiento, no se inventa
+ * una.
+ */
+function dateLine(
+  status: string,
+  expiresAt: string | null,
+  redeemedAt: string | null,
+): string | null {
+  if (status === "REDEEMED" && redeemedAt) return `Canjeado el ${formatDate(redeemedAt)}`;
+  if (status === "AVAILABLE" && expiresAt) return `Vence el ${formatDate(expiresAt)}`;
+  if (status === "EXPIRED" && expiresAt) return `Expiró el ${formatDate(expiresAt)}`;
+  return null;
+}
+
 /**
  * Tarjeta de premio reutilizable (extraída de `app/prizes/page.tsx`).
  * `action` reemplaza el chip de estado cuando el premio se puede canjear
@@ -21,15 +45,20 @@ export function PrizeCard({
   description,
   requiredStickers,
   status,
+  expiresAt = null,
+  redeemedAt = null,
   action,
 }: {
   name: string;
   description?: string | null;
   requiredStickers: number;
   status: string;
+  expiresAt?: string | null;
+  redeemedAt?: string | null;
   action?: ReactNode;
 }) {
   const statusMeta = STATUS_LABEL[status as KnownStatus] ?? STATUS_LABEL.LOCKED;
+  const date = dateLine(status, expiresAt, redeemedAt);
 
   return (
     <TicketCard className="flex flex-wrap items-center gap-3 px-4 pb-4">
@@ -38,13 +67,13 @@ export function PrizeCard({
       </div>
       <div className="min-w-0 flex-1">
         <p className="truncate font-bold text-ink-900">{name}</p>
-        {description ? (
+        {description && (
           <p className="truncate text-xs text-ink-500">{description}</p>
-        ) : (
-          <p className="font-mono text-xs text-ink-500">
-            Requiere {requiredStickers} stickers
-          </p>
         )}
+        <p className="font-mono text-xs text-ink-500">
+          Requiere {requiredStickers} stickers
+        </p>
+        {date && <p className="mt-0.5 text-[11px] text-ink-500/80">{date}</p>}
       </div>
       {action ?? (
         <span

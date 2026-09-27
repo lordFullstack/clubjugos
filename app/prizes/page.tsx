@@ -45,8 +45,11 @@ export default async function PrizesPage() {
             <li key={prize.id}>
               <PrizeCard
                 name={prize.name}
+                description={prize.description}
                 requiredStickers={prize.required_stickers}
                 status={prize.status}
+                expiresAt={prize.expiresAt}
+                redeemedAt={prize.redeemedAt}
                 action={
                   prize.status === "AVAILABLE" && prize.customerPrizeId ? (
                     <RedeemPrizeButton customerPrizeId={prize.customerPrizeId} />
