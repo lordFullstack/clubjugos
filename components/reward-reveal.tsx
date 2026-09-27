@@ -1,9 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import Link from "next/link";
 import Image from "next/image";
 import { IconGift, IconAlbum } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { RarityBadge } from "@/components/ui/rarity-badge";
 
 type StickerInfo = { name: string; imageUrl: string | null; rarity: string };
 type SpecialInfo = {
@@ -22,22 +23,6 @@ type Props = {
   completionTarget: number;
   prizeUnlocked: boolean;
   special: SpecialInfo | null;
-};
-
-const RARITY_LABEL: Record<string, string> = {
-  COMMON: "STICKER COMÚN",
-  UNCOMMON: "STICKER POCO COMÚN",
-  RARE: "STICKER RARO",
-  EPIC: "STICKER ÉPICO",
-  LEGENDARY: "STICKER LEGENDARIO",
-};
-
-const RARITY_COLOR: Record<string, string> = {
-  COMMON: "text-paper-200",
-  UNCOMMON: "text-jade-300",
-  RARE: "text-sky-300",
-  EPIC: "text-guava-light",
-  LEGENDARY: "text-foil-light",
 };
 
 // Cuánto dura la explosión de confeti antes de mostrar qué se ganó.
@@ -125,12 +110,9 @@ export function RewardReveal({
           oportunidad de ganar premios especiales mientras la campaña siga
           activa.
         </p>
-        <Link
-          href="/home"
-          className="mt-4 w-full max-w-sm rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
-        >
+        <Button href="/home" className="max-w-sm">
           VOLVER AL INICIO
-        </Link>
+        </Button>
       </main>
     );
   }
@@ -179,13 +161,7 @@ export function RewardReveal({
           <RevealArt imageUrl={sticker.imageUrl} ringLegendary={sticker.rarity === "LEGENDARY"} />
 
           <div>
-            <p
-              className={`text-xs font-bold uppercase tracking-[0.2em] ${
-                RARITY_COLOR[sticker.rarity] ?? RARITY_COLOR.COMMON
-              }`}
-            >
-              {RARITY_LABEL[sticker.rarity] ?? "STICKER"}
-            </p>
+            <RarityBadge rarity={sticker.rarity} tone="dark" size="md" />
             <p className="mt-1 font-display text-xl font-extrabold">
               {sticker.name}
             </p>
@@ -234,12 +210,9 @@ export function RewardReveal({
         </p>
       )}
 
-      <Link
-        href="/collection"
-        className="mt-4 w-full max-w-sm rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
-      >
+      <Button href="/collection" className="mt-4 max-w-sm">
         VER ÁLBUM
-      </Link>
+      </Button>
     </main>
   );
 }

@@ -8,6 +8,7 @@ import { logout } from "@/services/auth-service";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard } from "@/components/ticket-card";
 import { IconAvatar } from "@/components/icons";
+import { Button } from "@/components/ui/button";
 
 export default async function ProfilePage() {
   const supabase = await createClient();
@@ -67,12 +68,9 @@ export default async function ProfilePage() {
       </section>
 
       <form action={logout} className="mt-8">
-        <button
-          type="submit"
-          className="w-full rounded-2xl border-2 border-ink-900/[0.06] bg-white py-3.5 text-sm font-bold text-ink-700 shadow-card transition active:scale-[0.98]"
-        >
+        <Button type="submit" variant="secondary">
           Cerrar sesión
-        </button>
+        </Button>
       </form>
 
       <BottomNav />
