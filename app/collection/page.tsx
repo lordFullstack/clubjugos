@@ -5,7 +5,7 @@ import {
   getCurrentCollection,
   getSpecialWins,
 } from "@/services/customer-service";
-import { StickerGrid } from "@/components/sticker-grid";
+import { StickerAlbumGrid } from "@/components/sticker-album-grid";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
@@ -64,7 +64,7 @@ export default async function CollectionPage() {
           </TicketDivider>
 
           <div className="mt-5">
-            <StickerGrid stickers={stickers} size="md" />
+            <StickerAlbumGrid stickers={stickers} />
           </div>
         </TicketCard>
       ) : (

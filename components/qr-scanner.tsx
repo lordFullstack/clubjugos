@@ -7,6 +7,11 @@ import { EmptyState } from "@/components/ui/empty-state";
 
 type CameraStatus = "requesting" | "granted" | "denied" | "unsupported";
 
+// Cuánto se muestra la confirmación "QR detectado" antes de navegar —
+// LOOP 04 pide un estado propio para este momento, no saltar directo de
+// "escaneando" a la pantalla de recompensa.
+const DETECTED_PAUSE_MS = 450;
+
 export function QrScanner() {
   const router = useRouter();
   const videoRef = useRef<HTMLVideoElement>(null);
@@ -14,7 +19,7 @@ export function QrScanner() {
   const streamRef = useRef<MediaStream | null>(null);
   const rafRef = useRef<number | null>(null);
   const [status, setStatus] = useState<CameraStatus>("requesting");
-  const [hasResult, setHasResult] = useState(false);
+  const [detected, setDetected] = useState(false);
 
   const stopCamera = useCallback(() => {
     if (rafRef.current) cancelAnimationFrame(rafRef.current);
@@ -71,9 +76,11 @@ export function QrScanner() {
       if (code?.data) {
         const path = extractScanPath(code.data);
         if (path) {
-          setHasResult(true);
+          setDetected(true);
           stopCamera();
-          router.push(path);
+          // Confirmación visual breve ("QR detectado") antes de navegar —
+          // no bloquea: es más corta que cualquier transición de página.
+          setTimeout(() => router.push(path), DETECTED_PAUSE_MS);
           return;
         }
       }
@@ -119,7 +126,7 @@ export function QrScanner() {
         playsInline
       />
       <canvas ref={canvasRef} className="hidden" />
-      {!hasResult && (
+      {!detected && (
         <div className="pointer-events-none absolute inset-8 rounded-2xl border-4 border-white/70" />
       )}
       {status === "requesting" && (
@@ -127,7 +134,32 @@ export function QrScanner() {
           Activando cámara...
         </div>
       )}
+      {detected && (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2 bg-jade-900/80 text-white">
+          <div className="flex h-16 w-16 animate-pop-in items-center justify-center rounded-full bg-jade-500">
+            <CheckIcon className="h-8 w-8" strokeWidth={2.4} />
+          </div>
+          <p className="font-display text-sm font-extrabold uppercase tracking-wide">
+            ¡QR detectado!
+          </p>
+        </div>
+      )}
     </div>
+  );
+}
+
+function CheckIcon(props: React.SVGProps<SVGSVGElement>) {
+  return (
+    <svg
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      {...props}
+    >
+      <path d="M5 12.5 10 17.5 19 7" />
+    </svg>
   );
 }
 
