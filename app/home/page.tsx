@@ -51,64 +51,71 @@ export default async function HomePage() {
   const availablePrizeCount = prizes.filter((p) => p.status === "AVAILABLE").length;
 
   return (
-    <main className="min-h-screen bg-paper-100 px-6 pb-32 pt-8">
-      <header>
-        <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-citrus-500">
-          Hola
-        </p>
-        <h1 className="font-display text-3xl font-black text-ink-900">
-          {firstName}
-        </h1>
-      </header>
+    <main className="min-h-screen bg-paper-100 pb-32">
+      {/* UI PACK — corrección de paleta: el mockup pinta todo el bloque
+          superior (saludo + CTA + progreso) en verde oscuro full-bleed,
+          no una página clara con una card suelta. Orden también ajustado
+          al mockup: saludo -> CTA -> progreso (la spec funcional original
+          pedía progreso antes del CTA; acá se prioriza lo que el mockup
+          muestra literalmente). El resto de la página sigue en el fondo
+          neutro. */}
+      <div className="rounded-b-[2.5rem] bg-gradient-to-b from-citrus-700 to-citrus-900 px-6 pb-8 pt-8 text-white shadow-card">
+        <header>
+          <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-citrus-100">
+            Hola
+          </p>
+          <h1 className="font-display text-3xl font-black text-white">
+            {firstName}
+          </h1>
+          <p className="mt-1 text-sm text-white/70">
+            Escanea, colecciona y gana
+          </p>
+        </header>
 
-      {/* UI PACK LOOP 02: orden saludo -> progreso -> CTA -> stickers
-          recientes -> siguiente objetivo -> navegación. La card de
-          progreso ahora es solo eso (progreso): el mini-grid de stickers
-          que tenía antes se sacó por redundar con Álbum (no está en el
-          mockup de Home tampoco), y "próximo objetivo" pasa a ser su
-          propia sección más abajo. */}
-      <section className="mt-6">
-        {campaign ? (
-          <TicketCard className="px-5 pb-5">
-            <div className="flex items-start justify-between gap-3">
-              <div>
-                <p className="text-xs font-bold uppercase tracking-wide text-citrus-500">
-                  Colección activa
-                </p>
-                <h2 className="mt-0.5 font-display text-base font-bold text-ink-700">
-                  {campaign.name}
-                </h2>
+        <Button href="/scan" className="mt-6">
+          <IconScan className="h-5 w-5" strokeWidth={2.1} />
+          ESCANEAR QR
+        </Button>
+
+        <section className="mt-6">
+          {campaign ? (
+            <TicketCard className="px-5 pb-5">
+              <div className="flex items-start justify-between gap-3">
+                <div>
+                  <p className="text-xs font-bold uppercase tracking-wide text-citrus-600">
+                    Colección activa
+                  </p>
+                  <h2 className="mt-0.5 font-display text-base font-bold text-ink-700">
+                    {campaign.name}
+                  </h2>
+                </div>
+                <StampBadge>{progressPct}%</StampBadge>
               </div>
-              <StampBadge>{progressPct}%</StampBadge>
-            </div>
 
-            <TicketDivider className="mt-4 pt-4">
-              <div className="flex items-baseline justify-between text-sm">
-                <span className="font-mono font-bold text-ink-900">
-                  {obtainedCount} / {target}
-                </span>
-                <span className="font-semibold text-ink-500">stickers</span>
-              </div>
-              <ProgressBar percent={progressPct} />
-            </TicketDivider>
-          </TicketCard>
-        ) : (
-          <TicketCard className="px-6 pb-6">
-            <EmptyState
-              bare
-              icon={<IconJuiceCup className="mx-auto h-10 w-10" strokeWidth={1.6} />}
-              title="Todavía no estás en ninguna temporada activa"
-              message="Pedile a tu juguería que te sume a la campaña actual."
-            />
-          </TicketCard>
-        )}
-      </section>
+              <TicketDivider className="mt-4 pt-4">
+                <div className="flex items-baseline justify-between text-sm">
+                  <span className="font-mono font-bold text-ink-900">
+                    {obtainedCount} / {target}
+                  </span>
+                  <span className="font-semibold text-ink-500">stickers</span>
+                </div>
+                <ProgressBar percent={progressPct} />
+              </TicketDivider>
+            </TicketCard>
+          ) : (
+            <TicketCard className="px-6 pb-6">
+              <EmptyState
+                bare
+                icon={<IconJuiceCup className="mx-auto h-10 w-10" strokeWidth={1.6} />}
+                title="Todavía no estás en ninguna temporada activa"
+                message="Pedile a tu juguería que te sume a la campaña actual."
+              />
+            </TicketCard>
+          )}
+        </section>
+      </div>
 
-      <Button href="/scan" className="mt-6">
-        <IconScan className="h-5 w-5" strokeWidth={2.1} />
-        ESCANEAR QR
-      </Button>
-
+      <div className="px-6 pt-6">
       {lastSticker && (
         <section className="mt-6">
           <h2 className="text-xs font-bold uppercase tracking-wide text-ink-500">
@@ -157,6 +164,7 @@ export default async function HomePage() {
           <span className="text-xs font-bold uppercase tracking-wide">Ver →</span>
         </Link>
       )}
+      </div>
 
       <BottomNav />
     </main>

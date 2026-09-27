@@ -96,6 +96,12 @@ export function StickerRevealModal({
       ? "¡TE SALIÓ UN ESPECIAL!"
       : "¡LO CONSEGUISTE!";
 
+  // Mockup: el fondo violeta del modal es exclusivo del momento "especial"
+  // como titular ("¡TE SALIÓ UN ESPECIAL!" / "¡PREMIO ESPECIAL!"); un
+  // sticker normal (incluso si de paso trae un especial duplicado sin
+  // premio) sigue con el verde oscuro de siempre.
+  const cardTone = headline === "¡LO CONSEGUISTE!" ? "jade" : "special";
+
   return (
     <Modal
       open
@@ -103,7 +109,7 @@ export function StickerRevealModal({
       title={hasReveal ? "Resultado de tu escaneo" : "Sin novedades esta vez"}
       className="max-w-sm"
     >
-      <TicketCard tone="jade" className="px-6 pb-6 text-center">
+      <TicketCard tone={cardTone} className="px-6 pb-6 text-center">
         {/* UI LOOP 04: cierre explícito además de ESC/backdrop/back — el
             spec pide una "X" visible, no solo gestos implícitos. Mismo
             handleClose que ya usa "CONTINUAR": nunca le cuesta la
@@ -332,7 +338,8 @@ function SpecialBlock({
 }
 
 function ConfettiBurst({ count }: { count: number }) {
-  const colors = ["#e5511a", "#146356", "#c89b3c", "#e23e77", "#ffdfc7"];
+  // Colores actualizados a la paleta del mockup (verde/dorado/violeta/rosa).
+  const colors = ["#17a24a", "#f5bd14", "#8f1dca", "#d63c8c", "#ffffff"];
 
   // Las posiciones se generan solo en el cliente (useEffect) para evitar un
   // mismatch de hidratación: Math.random() durante el render de SSR

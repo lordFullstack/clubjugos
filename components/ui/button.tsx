@@ -18,7 +18,8 @@ const VARIANT_CLASS: Record<ButtonVariant, string> = {
 
 const SIZE_CLASS: Record<ButtonSize, string> = {
   // min-h-11 (44px) cumple el touch target mínimo aunque el texto sea corto.
-  md: "min-h-[3.25rem] w-full gap-2 rounded-2xl px-4 py-4 text-base",
+  // rounded-full (no rounded-2xl): en el mockup todos los CTA son píldora.
+  md: "min-h-[3.25rem] w-full gap-2 rounded-full px-4 py-4 text-base",
   sm: "min-h-11 gap-1.5 rounded-full px-3.5 py-1.5 text-xs",
 };
 

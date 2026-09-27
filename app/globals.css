@@ -16,28 +16,50 @@
 
    Superficies/texto/bordes son alias semánticos sobre esos mismos colores
    — pensados para usarse directo en CSS (ej. estilos de un futuro tema
-   oscuro) sin tener que repetir la escala completa. */
+   oscuro) sin tener que repetir la escala completa.
+
+   CORRECCIÓN (post-LOOP 04): la primera pasada de LOOP 01 inventó una
+   paleta cálida "papel + cítrico" que no correspondía al mockup real
+   (JugoClub-UI-Loops-Pack/1.webp), cuya dirección es verde como marca,
+   fondo blanco/gris neutro, y dorado/violeta como acentos de
+   especiales/premios. Los NOMBRES de los tokens se mantienen (evita
+   reescribir ~30 archivos que ya usan `citrus-500`, `bg-jade-100`, etc.
+   por puro churn) pero los VALORES se recalculan a partir de los colores
+   reales del mockup:
+     - `citrus` (antes naranja) → ahora es el verde de marca/CTA
+       (`#17a24a` brillante / `#085038` oscuro, tomados directo del
+       swatch "Colores" del mockup).
+     - `paper` (antes crema cálido) → ahora blanco/gris neutro.
+     - `ink` → mismo rol (texto), enfriado de un negro-café a un
+       negro-neutro para no chocar con el verde nuevo.
+     - `jade`, `foil`, `guava` ya eran conceptualmente correctos (verde
+       secundario, dorado, rosa/magenta) — solo se afina el matiz hex
+       para acercarlos a los que usa el mockup.
+     - `special` (nuevo): violeta (`#8f1dca`), solo para el fondo del
+       modal de "¡TE SALIÓ UN ESPECIAL!" — es el único momento del
+       mockup que usa violeta; todo lo demás (success, online, rareza
+       "poco común") sigue siendo verde, que es lo que ya representaban. */
 :root {
   /* Color — paleta base */
-  --color-paper-50: 255 253 248;
-  --color-paper-100: 251 243 227;
-  --color-paper-200: 243 228 198;
-  --color-paper-300: 232 210 164;
+  --color-paper-50: 255 255 255;
+  --color-paper-100: 244 246 245;
+  --color-paper-200: 233 237 235;
+  --color-paper-300: 214 221 217;
 
-  --color-ink-900: 36 28 21;
-  --color-ink-700: 74 59 44;
-  --color-ink-500: 138 122 100;
+  --color-ink-900: 17 24 21;
+  --color-ink-700: 61 71 66;
+  --color-ink-500: 111 122 116;
 
-  --color-citrus-50: 255 241 232;
-  --color-citrus-100: 255 223 199;
-  --color-citrus-200: 255 193 148;
-  --color-citrus-300: 255 159 93;
-  --color-citrus-400: 248 111 50;
-  --color-citrus-500: 229 81 26;
-  --color-citrus-600: 196 63 16;
-  --color-citrus-700: 156 49 12;
-  --color-citrus-800: 116 36 9;
-  --color-citrus-900: 77 24 6;
+  --color-citrus-50: 239 250 244;
+  --color-citrus-100: 215 244 228;
+  --color-citrus-200: 167 241 201;
+  --color-citrus-300: 115 232 169;
+  --color-citrus-400: 49 221 128;
+  --color-citrus-500: 27 169 93;
+  --color-citrus-600: 21 132 72;
+  --color-citrus-700: 17 105 58;
+  --color-citrus-800: 14 86 47;
+  --color-citrus-900: 11 68 37;
 
   --color-jade-50: 234 246 241;
   --color-jade-100: 203 234 224;
@@ -47,13 +69,18 @@
   --color-jade-700: 11 59 52;
   --color-jade-900: 6 38 33;
 
-  --color-foil-light: 231 200 120;
-  --color-foil: 200 155 60;
-  --color-foil-dark: 138 106 34;
+  --color-special-100: 237 219 247;
+  --color-special-500: 143 29 202;
+  --color-special-700: 94 18 134;
+  --color-special-900: 39 10 58;
 
-  --color-guava-light: 247 134 172;
-  --color-guava: 226 62 119;
-  --color-guava-dark: 169 40 87;
+  --color-foil-light: 255 217 107;
+  --color-foil: 245 189 20;
+  --color-foil-dark: 168 122 8;
+
+  --color-guava-light: 252 194 228;
+  --color-guava: 214 60 140;
+  --color-guava-dark: 157 40 100;
 
   /* Superficies */
   --surface-base: var(--color-paper-100);
@@ -120,48 +147,14 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 
-/* ===== Sistema "boleta / álbum de cromos" — elemento firma de la app ===== */
-
-/* Fila de perforaciones en el borde superior de una ticket-card, simulando
-   un talonario arrancado. El color de las "perforaciones" debe coincidir
-   con el fondo de página (paper-100) para dar el efecto de agujero real. */
-.ticket-notch-top {
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 16px;
-  background-image: radial-gradient(circle 8px, #fbf3e3 99%, transparent 100%);
-  background-size: 28px 28px;
-  background-position: 14px -8px;
-  background-repeat: repeat-x;
-}
-
-/* Variante para el fondo jade (pantalla de recompensa) */
-.ticket-notch-top-jade {
-  position: absolute;
-  top: -1px;
-  left: 0;
-  right: 0;
-  height: 16px;
-  background-image: radial-gradient(circle 8px, #062621 99%, transparent 100%);
-  background-size: 28px 28px;
-  background-position: 14px -8px;
-  background-repeat: repeat-x;
-}
-
-/* Línea de corte punteada, como el talón de una boleta */
+/* ===== Cards del design system =====
+   CORRECCIÓN: el mockup no tiene ningún motivo de "boleta perforada" — son
+   cards blancas simples con esquinas redondeadas y sombra suave. El nombre
+   de archivo/componente (`ticket-card.tsx`) y las clases `.ticket-*` se
+   mantienen por no forzar un rename en ~10 archivos que ya las usan, pero
+   ahora son solo un divisor plano en vez del corte punteado tipo talonario. */
 .ticket-divider {
-  border-top: 2px dashed rgba(36, 28, 21, 0.14);
-}
-
-/* Textura de papel sutil — grano fino sin pesar en performance */
-.paper-grain {
-  background-image: radial-gradient(
-      rgba(36, 28, 21, 0.035) 1px,
-      transparent 1px
-    );
-  background-size: 3px 3px;
+  border-top: 1px solid rgb(var(--color-ink-900) / 0.08);
 }
 
 /* Barrido de brillo foil sobre stickers raros al obtenerlos */
