@@ -1,5 +1,16 @@
 import type { Config } from "tailwindcss";
 
+// UI PACK — LOOP 01: cada color referencia la custom property equivalente
+// definida en app/globals.css (`rgb(var(--color-x) / <alpha-value>)` es el
+// formato que espera Tailwind para poder seguir generando modificadores de
+// opacidad — `bg-citrus-500/40`, `ring-ink-900/10`, etc. — sobre un color
+// que en el fondo es una CSS var). Los valores hex ya NO viven acá: la
+// fuente de verdad es globals.css, esto solo la conecta a las clases de
+// utilidad de Tailwind.
+function cssVarColor(name: string): string {
+  return `rgb(var(--color-${name}) / <alpha-value>)`;
+}
+
 const config: Config = {
   content: [
     "./app/**/*.{ts,tsx}",
@@ -10,51 +21,51 @@ const config: Config = {
       colors: {
         // Fondo "papel de álbum" — cálido, no el crema genérico de IA
         paper: {
-          50: "#fffdf8",
-          100: "#fbf3e3",
-          200: "#f3e4c6",
-          300: "#e8d2a4",
+          50: cssVarColor("paper-50"),
+          100: cssVarColor("paper-100"),
+          200: cssVarColor("paper-200"),
+          300: cssVarColor("paper-300"),
         },
         // Tinta principal — negro cálido, no #000 puro
         ink: {
-          900: "#241c15",
-          700: "#4a3b2c",
-          500: "#8a7a64",
+          900: cssVarColor("ink-900"),
+          700: cssVarColor("ink-700"),
+          500: cssVarColor("ink-500"),
         },
         // Cítrico quemado — color de marca, más rico que el naranja de stock
         citrus: {
-          50: "#fff1e8",
-          100: "#ffdfc7",
-          200: "#ffc194",
-          300: "#ff9f5d",
-          400: "#f86f32",
-          500: "#e5511a",
-          600: "#c43f10",
-          700: "#9c310c",
-          800: "#742409",
-          900: "#4d1806",
+          50: cssVarColor("citrus-50"),
+          100: cssVarColor("citrus-100"),
+          200: cssVarColor("citrus-200"),
+          300: cssVarColor("citrus-300"),
+          400: cssVarColor("citrus-400"),
+          500: cssVarColor("citrus-500"),
+          600: cssVarColor("citrus-600"),
+          700: cssVarColor("citrus-700"),
+          800: cssVarColor("citrus-800"),
+          900: cssVarColor("citrus-900"),
         },
         // Verde jade — hoja de fruta, contraste secundario / momentos especiales
         jade: {
-          50: "#eaf6f1",
-          100: "#cbeae0",
-          300: "#6fbfa6",
-          500: "#146356",
-          600: "#0f4f45",
-          700: "#0b3b34",
-          900: "#062621",
+          50: cssVarColor("jade-50"),
+          100: cssVarColor("jade-100"),
+          300: cssVarColor("jade-300"),
+          500: cssVarColor("jade-500"),
+          600: cssVarColor("jade-600"),
+          700: cssVarColor("jade-700"),
+          900: cssVarColor("jade-900"),
         },
         // Dorado foil — acentos de rareza/premio (usar con moderación)
         foil: {
-          light: "#e7c878",
-          DEFAULT: "#c89b3c",
-          dark: "#8a6a22",
+          light: cssVarColor("foil-light"),
+          DEFAULT: cssVarColor("foil"),
+          dark: cssVarColor("foil-dark"),
         },
         // Guayaba — pop de rareza épica/legendaria
         guava: {
-          light: "#f786ac",
-          DEFAULT: "#e23e77",
-          dark: "#a92857",
+          light: cssVarColor("guava-light"),
+          DEFAULT: cssVarColor("guava"),
+          dark: cssVarColor("guava-dark"),
         },
       },
       fontFamily: {
@@ -63,15 +74,24 @@ const config: Config = {
         mono: ["var(--font-mono)", "ui-monospace", "monospace"],
       },
       borderRadius: {
-        xl2: "1.25rem",
-        "3xl": "1.75rem",
-        "4xl": "2rem",
+        xl2: "var(--radius-lg)",
+        "3xl": "var(--radius-xl)",
+        "4xl": "var(--radius-2xl)",
       },
       boxShadow: {
-        soft: "0 10px 30px -10px rgba(36, 28, 21, 0.28)",
-        card: "0 4px 16px -6px rgba(36, 28, 21, 0.14)",
-        ticket: "0 14px 34px -12px rgba(36, 28, 21, 0.22)",
+        soft: "var(--shadow-soft)",
+        card: "var(--shadow-card)",
+        ticket: "var(--shadow-ticket)",
         stamp: "inset 0 0 0 2px rgba(36, 28, 21, 0.08)",
+      },
+      spacing: {
+        "2xs": "var(--space-2xs)",
+        xs: "var(--space-xs)",
+        sm: "var(--space-sm)",
+        md: "var(--space-md)",
+        lg: "var(--space-lg)",
+        xl: "var(--space-xl)",
+        "2xl": "var(--space-2xl)",
       },
       keyframes: {
         "pop-in": {

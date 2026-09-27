@@ -7,14 +7,8 @@ import { toggleStickerActive } from "@/services/sticker-admin-actions";
 import type { StickerRow } from "@/services/sticker-admin-service";
 import type { AdminPrizeRow } from "@/services/prize-admin-service";
 import { IconGift } from "@/components/icons";
-
-const RARITY_COLOR: Record<string, string> = {
-  COMMON: "bg-ink-900/5 text-ink-500",
-  UNCOMMON: "bg-jade-100 text-jade-700",
-  RARE: "bg-sky-100 text-sky-700",
-  EPIC: "bg-guava-light/25 text-guava-dark",
-  LEGENDARY: "bg-foil-light/30 text-foil-dark",
-};
+import { RarityBadge } from "@/components/ui/rarity-badge";
+import { Badge } from "@/components/ui/badge";
 
 export function StickerList({
   campaignId,
@@ -97,22 +91,17 @@ export function StickerList({
                   </p>
                 )}
               </div>
-              <span
-                className={`shrink-0 rounded-full px-2 py-1 text-[10px] font-bold ${RARITY_COLOR[sticker.rarity]}`}
-              >
-                {sticker.rarity}
-              </span>
+              <RarityBadge rarity={sticker.rarity} />
               <button
+                type="button"
                 onClick={() =>
                   toggleStickerActive(sticker.campaignStickerId, !sticker.active)
                 }
-                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
-                  sticker.active
-                    ? "bg-citrus-100 text-citrus-700"
-                    : "bg-ink-900/5 text-ink-500"
-                }`}
+                className="shrink-0"
               >
-                {sticker.active ? "Activo" : "Inactivo"}
+                <Badge tone={sticker.active ? "success" : "neutral"}>
+                  {sticker.active ? "Activo" : "Inactivo"}
+                </Badge>
               </button>
               <button
                 onClick={() => setEditingId(sticker.id)}
