@@ -2,6 +2,8 @@
 
 import { useState, useTransition } from "react";
 import { redeemPrize } from "@/services/redemption-service";
+import { Button } from "@/components/ui/button";
+import { Toast } from "@/components/ui/toast";
 
 export function RedeemPrizeButton({
   customerPrizeId,
@@ -23,29 +25,27 @@ export function RedeemPrizeButton({
 
   if (!confirming) {
     return (
-      <button
-        type="button"
-        onClick={() => setConfirming(true)}
-        className="shrink-0 rounded-full bg-citrus-500 px-3.5 py-1.5 text-xs font-bold text-white transition active:scale-95"
-      >
+      <Button type="button" size="sm" onClick={() => setConfirming(true)}>
         Canjear
-      </button>
+      </Button>
     );
   }
 
   return (
     <div className="flex shrink-0 flex-col items-end gap-1">
       <div className="flex gap-1.5">
-        <button
+        <Button
           type="button"
+          size="sm"
+          variant="outline"
           onClick={() => setConfirming(false)}
           disabled={isPending}
-          className="rounded-full border border-ink-900/10 px-3 py-1.5 text-xs font-semibold text-ink-700"
         >
           Cancelar
-        </button>
-        <button
+        </Button>
+        <Button
           type="button"
+          size="sm"
           disabled={isPending}
           onClick={() => {
             setError(null);
@@ -59,12 +59,15 @@ export function RedeemPrizeButton({
               }
             });
           }}
-          className="rounded-full bg-citrus-500 px-3 py-1.5 text-xs font-bold text-white disabled:opacity-60"
         >
           {isPending ? "Canjeando..." : "Confirmar"}
-        </button>
+        </Button>
       </div>
-      {error && <p className="text-[11px] font-medium text-red-600">{error}</p>}
+      {error && (
+        <Toast kind="error" className="px-2.5 py-1 text-[11px]">
+          {error}
+        </Toast>
+      )}
     </div>
   );
 }

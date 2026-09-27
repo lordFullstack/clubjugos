@@ -11,6 +11,7 @@ import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
 import { IconAlbum, IconGift } from "@/components/icons";
 import Image from "next/image";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function CollectionPage() {
   const supabase = await createClient();
@@ -67,15 +68,13 @@ export default async function CollectionPage() {
           </div>
         </TicketCard>
       ) : (
-        <TicketCard className="mt-6 px-6 pb-6 text-center">
-          <IconAlbum className="mx-auto h-10 w-10 text-citrus-400" strokeWidth={1.6} />
-          <p className="mt-2 font-semibold text-ink-900">
-            Todavía no hay una colección activa
-          </p>
-          <p className="mt-1 text-sm text-ink-500">
-            En cuanto tu juguería active una temporada, vas a ver tus stickers
-            acá.
-          </p>
+        <TicketCard className="mt-6 px-6 pb-6">
+          <EmptyState
+            bare
+            icon={<IconAlbum className="mx-auto h-10 w-10" strokeWidth={1.6} />}
+            title="Todavía no hay una colección activa"
+            message="En cuanto tu juguería active una temporada, vas a ver tus stickers acá."
+          />
         </TicketCard>
       )}
 

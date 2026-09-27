@@ -9,6 +9,7 @@ import {
   IconPrize,
   IconProfile,
 } from "@/components/icons";
+import { IconButton } from "@/components/ui/icon-button";
 
 const TABS = [
   { href: "/home", label: "Inicio", Icon: IconHome, isCta: false },
@@ -28,13 +29,14 @@ export function BottomNav() {
           if (isCta) {
             return (
               <li key={href} className="-mt-7">
-                <Link
+                <IconButton
                   href={href}
+                  size="lg"
                   aria-label="Escanear QR"
-                  className="flex h-16 w-16 items-center justify-center rounded-full border-4 border-paper-100 bg-gradient-to-b from-citrus-400 to-citrus-600 text-white shadow-soft transition active:scale-95"
+                  className="border-4 border-paper-100 bg-gradient-to-b from-citrus-400 to-citrus-600 text-white shadow-soft"
                 >
                   <Icon className="h-7 w-7" strokeWidth={2} />
-                </Link>
+                </IconButton>
               </li>
             );
           }

@@ -1,4 +1,3 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import {
@@ -10,6 +9,8 @@ import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
 import { IconJuiceCup, IconScan } from "@/components/icons";
+import { Button } from "@/components/ui/button";
+import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function HomePage() {
   const supabase = await createClient();
@@ -71,25 +72,21 @@ export default async function HomePage() {
             </TicketDivider>
           </TicketCard>
         ) : (
-          <TicketCard className="px-6 pb-6 text-center">
-            <IconJuiceCup className="mx-auto h-10 w-10 text-citrus-400" strokeWidth={1.6} />
-            <p className="mt-2 font-semibold text-ink-900">
-              Todavía no estás en ninguna temporada activa
-            </p>
-            <p className="mt-1 text-sm text-ink-500">
-              Pedile a tu juguería que te sume a la campaña actual.
-            </p>
+          <TicketCard className="px-6 pb-6">
+            <EmptyState
+              bare
+              icon={<IconJuiceCup className="mx-auto h-10 w-10" strokeWidth={1.6} />}
+              title="Todavía no estás en ninguna temporada activa"
+              message="Pedile a tu juguería que te sume a la campaña actual."
+            />
           </TicketCard>
         )}
       </section>
 
-      <Link
-        href="/scan"
-        className="mt-6 flex w-full items-center justify-center gap-2 rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
-      >
+      <Button href="/scan" className="mt-6">
         <IconScan className="h-5 w-5" strokeWidth={2.1} />
         ESCANEAR QR
-      </Link>
+      </Button>
 
       <BottomNav />
     </main>

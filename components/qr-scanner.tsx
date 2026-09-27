@@ -3,6 +3,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import jsQR from "jsqr";
+import { EmptyState } from "@/components/ui/empty-state";
 
 type CameraStatus = "requesting" | "granted" | "denied" | "unsupported";
 
@@ -90,6 +91,7 @@ export function QrScanner() {
   if (status === "unsupported") {
     return (
       <EmptyState
+        className="mx-auto max-w-sm"
         icon="🚫"
         title="Tu navegador no soporta cámara"
         message="Probá abrir JugoClub desde Chrome o Safari actualizado."
@@ -100,6 +102,7 @@ export function QrScanner() {
   if (status === "denied") {
     return (
       <EmptyState
+        className="mx-auto max-w-sm"
         icon="🔒"
         title="Necesitamos permiso de cámara"
         message="Activá el permiso de cámara para JugoClub en la configuración de tu navegador y volvé a intentar."
@@ -140,22 +143,4 @@ function extractScanPath(rawValue: string): string | null {
   } catch {
     return null;
   }
-}
-
-function EmptyState({
-  icon,
-  title,
-  message,
-}: {
-  icon: string;
-  title: string;
-  message: string;
-}) {
-  return (
-    <div className="mx-auto max-w-sm rounded-3xl bg-white p-6 text-center shadow-card">
-      <div className="text-4xl">{icon}</div>
-      <p className="mt-2 font-semibold text-ink-900">{title}</p>
-      <p className="mt-1 text-sm text-ink-500">{message}</p>
-    </div>
-  );
 }
