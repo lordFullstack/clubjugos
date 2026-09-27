@@ -47,7 +47,7 @@ export default async function PrizesPage() {
   }
 
   const profile = await getCustomerProfile(user.id);
-  const prizes = await getCustomerPrizes(profile?.business_id ?? null);
+  const prizes = await getCustomerPrizes(profile?.business_id ?? null, user.id);
 
   // LOOP 06: la pantalla de Premios distingue tres estados —
   // Disponibles, Canjeados y "sin premios" — en vez de una sola lista plana

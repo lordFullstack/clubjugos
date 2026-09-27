@@ -54,9 +54,17 @@ const EMPTY_COLLECTION: CampaignCollection = {
  * colección (qué stickers tiene, cuáles le faltan, y cuántos duplicados).
  * Si el cliente todavía no pertenece a ningún negocio o no hay campaña
  * activa, devuelve un estado vacío en vez de fallar.
+ *
+ * LOOP 08 — hallazgo prioritario del AUDIT: la consulta a
+ * `customer_stickers` ahora filtra explícitamente por `customer_id`, además
+ * de la policy de RLS (`customer_stickers_select_own`) que ya la acotaba.
+ * Es defensa en profundidad: si esta función alguna vez se invocara con el
+ * cliente de `service_role` (que ignora RLS) en vez del cliente de sesión,
+ * el filtro explícito sigue protegiendo — antes dependía únicamente de RLS.
  */
 export async function getCurrentCollection(
   businessId: string | null,
+  customerId: string,
 ): Promise<CampaignCollection> {
   if (!businessId) return EMPTY_COLLECTION;
 
@@ -81,7 +89,8 @@ export async function getCurrentCollection(
   const { data: obtained } = await supabase
     .from("customer_stickers")
     .select("sticker_id")
-    .eq("campaign_id", campaign.id);
+    .eq("campaign_id", campaign.id)
+    .eq("customer_id", customerId);
 
   const countByStickerId = new Map<string, number>();
   for (const row of obtained ?? []) {
@@ -241,9 +250,15 @@ export type PrizeView = {
  * vez que el backend crea la fila en customer_prizes (Fase 8). Hasta que eso
  * ocurra, el premio se muestra como LOCKED, sin importar el progreso del
  * cliente: el frontend nunca decide por sí mismo si un premio está desbloqueado.
+ *
+ * LOOP 08 — hallazgo prioritario del AUDIT: filtro explícito por
+ * `customer_id` en `customer_prizes`, igual razón que en
+ * `getCurrentCollection` — antes dependía únicamente de la policy de RLS
+ * `customer_prizes_select_own`.
  */
 export async function getCustomerPrizes(
   businessId: string | null,
+  customerId: string,
 ): Promise<PrizeView[]> {
   if (!businessId) return [];
 
@@ -257,7 +272,8 @@ export async function getCustomerPrizes(
 
   const { data: customerPrizes } = await supabase
     .from("customer_prizes")
-    .select("id, prize_id, status, earned_at, expires_at, redeemed_at");
+    .select("id, prize_id, status, earned_at, expires_at, redeemed_at")
+    .eq("customer_id", customerId);
 
   const byPrizeId = new Map<
     string,
@@ -294,12 +310,21 @@ export type HistoryItem = {
   obtainedAt: string;
 };
 
-export async function getCustomerHistory(): Promise<HistoryItem[]> {
+/**
+ * LOOP 08 — hallazgo prioritario del AUDIT: filtro explícito por
+ * `customer_id`, misma razón que en `getCurrentCollection` /
+ * `getCustomerPrizes`. Antes esta función ni siquiera recibía el id del
+ * cliente: dependía enteramente de `customer_stickers_select_own` (RLS).
+ */
+export async function getCustomerHistory(
+  customerId: string,
+): Promise<HistoryItem[]> {
   const supabase = await createClient();
 
   const { data } = await supabase
     .from("customer_stickers")
     .select("id, obtained_at, stickers(name)")
+    .eq("customer_id", customerId)
     .order("obtained_at", { ascending: false })
     .limit(20);
 

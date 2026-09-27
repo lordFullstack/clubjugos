@@ -1,6 +1,7 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { scanQrToken } from "@/services/scan-service";
+import { signRewardPayload, type RewardPayload } from "@/lib/reward/sign";
 
 export default async function ScanTokenPage({
   params,
@@ -23,27 +24,26 @@ export default async function ScanTokenPage({
     redirect(`/scan?error=${encodeURIComponent(result.error)}`);
   }
 
-  const p = new URLSearchParams({
-    complete: result.collectionComplete ? "1" : "0",
-    count: String(result.obtainedCount),
-    target: String(result.completionTarget),
-    prize: result.prizeUnlocked ? "1" : "0",
-  });
+  // LOOP 08: un solo token firmado en vez de campos sueltos en la URL — ver
+  // lib/reward/sign.ts. El backend (redeem_qr_token) ya decidió y grabó
+  // todo esto; acá solo se empaqueta el resultado para mostrarlo una vez.
+  const payload: RewardPayload = {
+    customerId: user.id,
+    complete: result.collectionComplete,
+    count: result.obtainedCount,
+    target: result.completionTarget,
+    prize: result.prizeUnlocked,
+    name: result.sticker?.name,
+    img: result.sticker?.imageUrl ?? undefined,
+    rarity: result.sticker?.rarity,
+    spName: result.special?.name,
+    spImg: result.special?.imageUrl ?? undefined,
+    spRarity: result.special?.rarity,
+    spDup: result.special?.isDuplicate,
+    spPrize: result.special?.prizeUnlocked,
+    spPrizeName: result.special?.prizeName ?? undefined,
+  };
 
-  if (result.sticker) {
-    p.set("name", result.sticker.name);
-    if (result.sticker.imageUrl) p.set("img", result.sticker.imageUrl);
-    p.set("rarity", result.sticker.rarity);
-  }
-
-  if (result.special) {
-    p.set("spName", result.special.name);
-    if (result.special.imageUrl) p.set("spImg", result.special.imageUrl);
-    p.set("spRarity", result.special.rarity);
-    p.set("spDup", result.special.isDuplicate ? "1" : "0");
-    p.set("spPrize", result.special.prizeUnlocked ? "1" : "0");
-    if (result.special.prizeName) p.set("spPrizeName", result.special.prizeName);
-  }
-
-  redirect(`/reward?${p.toString()}`);
+  const signedToken = signRewardPayload(payload);
+  redirect(`/reward?t=${encodeURIComponent(signedToken)}`);
 }

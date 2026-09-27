@@ -25,7 +25,7 @@ export default async function CollectionPage() {
 
   const profile = await getCustomerProfile(user.id);
   const [{ campaign, stickers, obtainedCount }, specialWins] = await Promise.all([
-    getCurrentCollection(profile?.business_id ?? null),
+    getCurrentCollection(profile?.business_id ?? null, user.id),
     getSpecialWins(profile?.business_id ?? null),
   ]);
 
