@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/sw-register";
+import { ConnectivityBanner } from "@/components/connectivity-banner";
 import "./globals.css";
 
 const inter = Inter({
@@ -58,6 +59,7 @@ export default function RootLayout({
       className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}
     >
       <body>
+        <ConnectivityBanner />
         {children}
         <ServiceWorkerRegister />
       </body>
