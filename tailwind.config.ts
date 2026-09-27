@@ -124,6 +124,12 @@ const config: Config = {
           "60%": { transform: "scale(1.04) rotate(1deg)", opacity: "1" },
           "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
         },
+        // UI LOOP 03: línea de escaneo que sube y baja dentro del recuadro de
+        // la cámara — refuerza "está buscando el QR" sin agregar texto extra.
+        "scan-line": {
+          "0%, 100%": { transform: "translateY(0)" },
+          "50%": { transform: "translateY(100%)" },
+        },
       },
       animation: {
         "pop-in": "pop-in 0.25s ease-out",
@@ -135,6 +141,7 @@ const config: Config = {
         // LOOP 03: entrada del sticker en el modal de revelacion — arranca
         // ~200ms despues de que aparece la card (fase 250-600ms del spec).
         "reveal-pop": "reveal-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.2s both",
+        "scan-line": "scan-line 2.2s ease-in-out infinite",
       },
     },
   },
