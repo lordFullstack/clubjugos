@@ -19,11 +19,13 @@ export function RarityBadge({
   const meta = getRarityMeta(rarity);
 
   if (tone === "dark") {
+    // Píldora sólida, como "STICKER COMÚN" en el mockup del modal de
+    // revelación — antes era texto suelto sin fondo.
     return (
       <span
-        className={`font-bold uppercase tracking-[0.2em] ${
-          size === "sm" ? "text-xs" : "text-sm"
-        } ${meta.textOnDark} ${className}`}
+        className={`inline-flex items-center rounded-full font-bold uppercase tracking-wide ${meta.badgeBgOnDark} ${meta.textOnDark} ${
+          size === "sm" ? "px-2.5 py-1 text-xs" : "px-3.5 py-1.5 text-sm"
+        } ${className}`}
       >
         {size === "sm" ? meta.label : meta.revealLabel}
       </span>

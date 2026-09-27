@@ -45,7 +45,7 @@ const config: Config = {
           800: cssVarColor("citrus-800"),
           900: cssVarColor("citrus-900"),
         },
-        // Verde jade — hoja de fruta, contraste secundario / momentos especiales
+        // Verde jade — contraste secundario (éxito/online/rareza "poco común")
         jade: {
           50: cssVarColor("jade-50"),
           100: cssVarColor("jade-100"),
@@ -54,6 +54,14 @@ const config: Config = {
           600: cssVarColor("jade-600"),
           700: cssVarColor("jade-700"),
           900: cssVarColor("jade-900"),
+        },
+        // Violeta — único momento del mockup que lo usa: el modal de
+        // "¡TE SALIÓ UN ESPECIAL!" (sticker-reveal-modal.tsx).
+        special: {
+          100: cssVarColor("special-100"),
+          500: cssVarColor("special-500"),
+          700: cssVarColor("special-700"),
+          900: cssVarColor("special-900"),
         },
         // Dorado foil — acentos de rareza/premio (usar con moderación)
         foil: {

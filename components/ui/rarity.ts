@@ -21,8 +21,11 @@ export type RarityMeta = {
   label: string;
   /** Label largo para el momento de revelación ("STICKER COMÚN"). */
   revealLabel: string;
-  /** Color de texto (sobre fondo oscuro, ej. modal de revelación). */
+  /** Color de texto de la píldora sólida del modal de revelación. */
   textOnDark: string;
+  /** Fondo de esa misma píldora — mockup: "STICKER COMÚN" es un pill
+   * sólido, no texto suelto sobre el fondo oscuro del modal. */
+  badgeBgOnDark: string;
   /** Color de texto (sobre fondo claro, ej. badge en el álbum). */
   textOnLight: string;
   /** Ring/borde para la miniatura en el álbum. */
@@ -45,7 +48,8 @@ export const RARITY: Record<StickerRarity, RarityMeta> = {
   COMMON: {
     label: "Común",
     revealLabel: "STICKER COMÚN",
-    textOnDark: "text-paper-200",
+    textOnDark: "text-white",
+    badgeBgOnDark: "bg-citrus-500",
     textOnLight: "text-ink-500",
     ring: "ring-ink-900/10",
     badgeBg: "bg-ink-900/5",
@@ -54,7 +58,8 @@ export const RARITY: Record<StickerRarity, RarityMeta> = {
   UNCOMMON: {
     label: "Poco común",
     revealLabel: "STICKER POCO COMÚN",
-    textOnDark: "text-jade-300",
+    textOnDark: "text-white",
+    badgeBgOnDark: "bg-jade-500",
     textOnLight: "text-jade-600",
     ring: "ring-jade-500/40",
     badgeBg: "bg-jade-50",
@@ -63,7 +68,8 @@ export const RARITY: Record<StickerRarity, RarityMeta> = {
   RARE: {
     label: "Raro",
     revealLabel: "STICKER RARO",
-    textOnDark: "text-sky-300",
+    textOnDark: "text-white",
+    badgeBgOnDark: "bg-sky-500",
     textOnLight: "text-sky-600",
     ring: "ring-sky-500/40",
     badgeBg: "bg-sky-50",
@@ -72,20 +78,22 @@ export const RARITY: Record<StickerRarity, RarityMeta> = {
   EPIC: {
     label: "Épico",
     revealLabel: "STICKER ÉPICO",
-    textOnDark: "text-guava-light",
+    textOnDark: "text-white",
+    badgeBgOnDark: "bg-guava",
     textOnLight: "text-guava-dark",
     ring: "ring-guava/50",
     badgeBg: "bg-guava-light/15",
-    glow: "shadow-[0_0_0_3px_rgba(226,62,119,0.18)]",
+    glow: "shadow-[0_0_0_3px_rgba(214,60,140,0.18)]",
   },
   LEGENDARY: {
     label: "Legendario",
     revealLabel: "STICKER LEGENDARIO",
-    textOnDark: "text-foil-light",
+    textOnDark: "text-ink-900",
+    badgeBgOnDark: "bg-foil-light",
     textOnLight: "text-foil-dark",
     ring: "ring-foil/70",
     badgeBg: "bg-foil-light/20",
-    glow: "shadow-[0_0_0_3px_rgba(200,155,60,0.25)]",
+    glow: "shadow-[0_0_0_3px_rgba(245,189,20,0.25)]",
   },
 };
 
