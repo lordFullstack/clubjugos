@@ -4,6 +4,7 @@ import { useState } from "react";
 import { PrizeForm } from "./prize-form";
 import { togglePrizeActive } from "@/services/prize-admin-actions";
 import type { AdminPrizeRow } from "@/services/prize-admin-service";
+import { Badge } from "@/components/ui/badge";
 
 export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
   const [creating, setCreating] = useState(false);
@@ -58,16 +59,15 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
                 </p>
               </div>
               <button
+                type="button"
                 onClick={() =>
                   togglePrizeActive(prize.id, prize.status !== "active")
                 }
-                className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${
-                  prize.status === "active"
-                    ? "bg-citrus-100 text-citrus-700"
-                    : "bg-ink-900/5 text-ink-500"
-                }`}
+                className="shrink-0"
               >
-                {prize.status === "active" ? "Activo" : "Inactivo"}
+                <Badge tone={prize.status === "active" ? "success" : "neutral"}>
+                  {prize.status === "active" ? "Activo" : "Inactivo"}
+                </Badge>
               </button>
               <button
                 onClick={() => setEditingId(prize.id)}

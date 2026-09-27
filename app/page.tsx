@@ -22,7 +22,7 @@ export default function LandingPage() {
           Club de clientes frecuentes
         </span>
 
-        <h1 className="mt-6 font-display text-5xl font-black italic tracking-tight text-ink-900">
+        <h1 className="mt-6 font-display text-4xl font-extrabold tracking-tight text-ink-900 sm:text-5xl">
           Jugo<span className="text-citrus-500">Club</span>
         </h1>
 

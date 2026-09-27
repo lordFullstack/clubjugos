@@ -1,27 +1,26 @@
 import type { Metadata, Viewport } from "next";
-import { Inter, Fraunces, JetBrains_Mono } from "next/font/google";
+import { Sora, JetBrains_Mono } from "next/font/google";
 import { ServiceWorkerRegister } from "@/components/sw-register";
 import { ConnectivityBanner } from "@/components/connectivity-banner";
 import "./globals.css";
 
-const inter = Inter({
+// UI PACK — LOOP 01: Sora como única familia (cuerpo y display), tal como
+// la nombra el mockup del pack visual — reemplaza al par Inter (cuerpo) +
+// Fraunces (títulos/cifras, elegida antes como guiño a etiquetas de cajas
+// de fruta vintage). Se mapea a las dos custom properties existentes
+// (--font-sans y --font-display) para no tener que tocar cada uso de
+// `font-sans`/`font-display` en el resto del código.
+const sora = Sora({
   subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
-
-// Serif de carácter, con guiño a la tipografía de etiquetas de cajas de
-// fruta vintage — es la voz visual de la marca (logo, títulos, cifras).
-const fraunces = Fraunces({
-  subsets: ["latin"],
-  variable: "--font-display",
-  style: ["normal", "italic"],
-  axes: ["opsz", "SOFT"],
+  variable: "--font-sora",
+  weight: ["400", "500", "600", "700", "800"],
   display: "swap",
 });
 
 // Monoespaciada para códigos de boleta, tokens y fechas — refuerza la
-// sensación de "recibo/talonario".
+// sensación de "recibo/talonario". El pack UI no nombra una mono propia y
+// el look de "ticket" ya depende de esta en varios lados, así que se
+// mantiene.
 const jetbrainsMono = JetBrains_Mono({
   subsets: ["latin"],
   variable: "--font-mono",
@@ -54,10 +53,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html
-      lang="es"
-      className={`${inter.variable} ${fraunces.variable} ${jetbrainsMono.variable}`}
-    >
+    <html lang="es" className={`${sora.variable} ${jetbrainsMono.variable}`}>
       <body>
         <ConnectivityBanner />
         {children}

@@ -1,14 +1,15 @@
 import type { ReactNode } from "react";
 import { TicketCard } from "@/components/ticket-card";
 import { IconGift } from "@/components/icons";
+import { Badge, type BadgeTone } from "@/components/ui/badge";
 
 type KnownStatus = "AVAILABLE" | "REDEEMED" | "EXPIRED" | "LOCKED";
 
-const STATUS_LABEL: Record<KnownStatus, { label: string; className: string }> = {
-  AVAILABLE: { label: "Disponible", className: "bg-citrus-100 text-citrus-700" },
-  REDEEMED: { label: "Canjeado", className: "bg-ink-900/5 text-ink-500" },
-  EXPIRED: { label: "Expirado", className: "bg-red-50 text-red-500" },
-  LOCKED: { label: "Bloqueado", className: "bg-ink-900/5 text-ink-500" },
+const STATUS_LABEL: Record<KnownStatus, { label: string; tone: BadgeTone }> = {
+  AVAILABLE: { label: "Disponible", tone: "success" },
+  REDEEMED: { label: "Canjeado", tone: "neutral" },
+  EXPIRED: { label: "Expirado", tone: "danger" },
+  LOCKED: { label: "Bloqueado", tone: "neutral" },
 };
 
 function formatDate(iso: string): string {
@@ -75,13 +76,7 @@ export function PrizeCard({
         </p>
         {date && <p className="mt-0.5 text-[11px] text-ink-500/80">{date}</p>}
       </div>
-      {action ?? (
-        <span
-          className={`shrink-0 rounded-full px-2.5 py-1 text-xs font-bold ${statusMeta.className}`}
-        >
-          {statusMeta.label}
-        </span>
-      )}
+      {action ?? <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>}
     </TicketCard>
   );
 }

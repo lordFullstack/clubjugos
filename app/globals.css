@@ -2,10 +2,108 @@
 @tailwind components;
 @tailwind utilities;
 
+/* ============================================================
+   UI PACK — LOOP 01: Design System (tokens CSS)
+   ============================================================
+   Colores en tripletas "R G B" (sin la función rgb()) a propósito: es el
+   formato que espera el plugin de color de Tailwind para poder generar
+   modificadores de opacidad (`bg-citrus-500/40`, `ring-ink-900/10`, etc.)
+   sobre un color que en realidad resuelve una custom property — el
+   proyecto ya usa esa sintaxis de opacidad en ~30 archivos, así que la
+   capa de tokens tenía que preservarla, no solo "verse igual". La fuente
+   de verdad sigue siendo esta lista; `tailwind.config.ts` solo la
+   referencia con `rgb(var(--color-x) / <alpha-value>)`.
+
+   Superficies/texto/bordes son alias semánticos sobre esos mismos colores
+   — pensados para usarse directo en CSS (ej. estilos de un futuro tema
+   oscuro) sin tener que repetir la escala completa. */
 :root {
-  --font-sans: "Inter", system-ui, sans-serif;
-  --font-display: "Inter", system-ui, sans-serif;
+  /* Color — paleta base */
+  --color-paper-50: 255 253 248;
+  --color-paper-100: 251 243 227;
+  --color-paper-200: 243 228 198;
+  --color-paper-300: 232 210 164;
+
+  --color-ink-900: 36 28 21;
+  --color-ink-700: 74 59 44;
+  --color-ink-500: 138 122 100;
+
+  --color-citrus-50: 255 241 232;
+  --color-citrus-100: 255 223 199;
+  --color-citrus-200: 255 193 148;
+  --color-citrus-300: 255 159 93;
+  --color-citrus-400: 248 111 50;
+  --color-citrus-500: 229 81 26;
+  --color-citrus-600: 196 63 16;
+  --color-citrus-700: 156 49 12;
+  --color-citrus-800: 116 36 9;
+  --color-citrus-900: 77 24 6;
+
+  --color-jade-50: 234 246 241;
+  --color-jade-100: 203 234 224;
+  --color-jade-300: 111 191 166;
+  --color-jade-500: 20 99 86;
+  --color-jade-600: 15 79 69;
+  --color-jade-700: 11 59 52;
+  --color-jade-900: 6 38 33;
+
+  --color-foil-light: 231 200 120;
+  --color-foil: 200 155 60;
+  --color-foil-dark: 138 106 34;
+
+  --color-guava-light: 247 134 172;
+  --color-guava: 226 62 119;
+  --color-guava-dark: 169 40 87;
+
+  /* Superficies */
+  --surface-base: var(--color-paper-100);
+  --surface-raised: var(--color-paper-50);
+  --surface-card: 255 255 255;
+  --surface-inverse: var(--color-jade-900);
+
+  /* Texto */
+  --text-primary: var(--color-ink-900);
+  --text-secondary: var(--color-ink-700);
+  --text-muted: var(--color-ink-500);
+  --text-inverse: 255 255 255;
+
+  /* Bordes */
+  --border-subtle: var(--color-ink-900) / 0.06;
+  --border-default: var(--color-ink-900) / 0.1;
+
+  /* Radios */
+  --radius-sm: 0.75rem;
+  --radius-md: 1rem;
+  --radius-lg: 1.25rem;
+  --radius-xl: 1.75rem;
+  --radius-2xl: 2rem;
+  --radius-full: 9999px;
+
+  /* Spacing — escala corta para el ritmo vertical repetido de cards/listas */
+  --space-2xs: 0.375rem;
+  --space-xs: 0.5rem;
+  --space-sm: 0.75rem;
+  --space-md: 1rem;
+  --space-lg: 1.5rem;
+  --space-xl: 2rem;
+  --space-2xl: 3rem;
+
+  /* Tipografía — Sora como única familia (dirección del mockup del pack UI;
+     reemplaza a Inter/Fraunces, que hasta acá cubrían cuerpo y display por
+     separado). `--font-sora` la inyecta next/font/google en app/layout.tsx
+     (className del <html>) — referenciarla acá en vez de escribir "Sora" a
+     mano es lo que hace que realmente se sirva la fuente optimizada por
+     Next, no solo el nombre de familia. JetBrains Mono se mantiene para
+     tokens/fechas/boletas: el mockup no menciona una mono propia y el look
+     de "ticket" ya depende de ella en varios lados. */
+  --font-sans: var(--font-sora), system-ui, sans-serif;
+  --font-display: var(--font-sora), system-ui, sans-serif;
   --font-mono: ui-monospace, monospace;
+
+  /* Sombras */
+  --shadow-soft: 0 10px 30px -10px rgba(36, 28, 21, 0.28);
+  --shadow-card: 0 4px 16px -6px rgba(36, 28, 21, 0.14);
+  --shadow-ticket: 0 14px 34px -12px rgba(36, 28, 21, 0.22);
 }
 
 html,

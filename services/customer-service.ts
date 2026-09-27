@@ -6,6 +6,7 @@ export type CustomerProfile = {
   phone: string;
   email: string | null;
   business_id: string | null;
+  avatar_url: string | null;
 };
 
 /**
@@ -21,7 +22,7 @@ export async function getCustomerProfile(
 
   const { data } = await supabase
     .from("profiles")
-    .select("id, name, phone, email, business_id")
+    .select("id, name, phone, email, business_id, avatar_url")
     .eq("id", userId)
     .single();
 
