@@ -1,25 +1,12 @@
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 import { StickerRevealModal } from "@/components/sticker-reveal-modal";
+import { verifyRewardPayload } from "@/lib/reward/sign";
 
 export default async function RewardPage({
   searchParams,
 }: {
-  searchParams: Promise<{
-    name?: string;
-    img?: string;
-    rarity?: string;
-    complete?: string;
-    count?: string;
-    target?: string;
-    prize?: string;
-    spName?: string;
-    spImg?: string;
-    spRarity?: string;
-    spDup?: string;
-    spPrize?: string;
-    spPrizeName?: string;
-  }>;
+  searchParams: Promise<{ t?: string }>;
 }) {
   const supabase = await createClient();
   const {
@@ -30,37 +17,42 @@ export default async function RewardPage({
     redirect("/login");
   }
 
-  const params = await searchParams;
+  const { t } = await searchParams;
 
-  // Debe venir de un escaneo real: al menos un sticker nuevo o un especial.
-  if (!params.name && !params.spName) {
+  // LOOP 08: un solo token firmado (ver lib/reward/sign.ts) en vez de
+  // campos sueltos en la URL. Si falta, está corrupto, venció (5 min) o le
+  // pertenece a otra sesión, no hay nada que mostrar — se trata igual que
+  // "no vino de un escaneo real", como ya hacía el chequeo anterior.
+  const payload = t ? verifyRewardPayload(t, user.id) : null;
+
+  if (!payload || (!payload.name && !payload.spName)) {
     redirect("/home");
   }
 
   return (
     <StickerRevealModal
       sticker={
-        params.name
+        payload.name
           ? {
-              name: params.name,
-              imageUrl: params.img ?? null,
-              rarity: params.rarity ?? "COMMON",
+              name: payload.name,
+              imageUrl: payload.img ?? null,
+              rarity: payload.rarity ?? "COMMON",
             }
           : null
       }
-      collectionComplete={params.complete === "1"}
-      obtainedCount={Number(params.count ?? 0)}
-      completionTarget={Number(params.target ?? 0)}
-      prizeUnlocked={params.prize === "1"}
+      collectionComplete={payload.complete}
+      obtainedCount={payload.count}
+      completionTarget={payload.target}
+      prizeUnlocked={payload.prize}
       special={
-        params.spName
+        payload.spName
           ? {
-              name: params.spName,
-              imageUrl: params.spImg ?? null,
-              rarity: params.spRarity ?? "EPIC",
-              isDuplicate: params.spDup === "1",
-              prizeUnlocked: params.spPrize === "1",
-              prizeName: params.spPrizeName ?? null,
+              name: payload.spName,
+              imageUrl: payload.spImg ?? null,
+              rarity: payload.spRarity ?? "EPIC",
+              isDuplicate: payload.spDup ?? false,
+              prizeUnlocked: payload.spPrize ?? false,
+              prizeName: payload.spPrizeName ?? null,
             }
           : null
       }

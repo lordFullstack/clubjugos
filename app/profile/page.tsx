@@ -24,13 +24,14 @@ export default async function ProfilePage() {
 
   const [profile, history] = await Promise.all([
     getCustomerProfile(user.id),
-    getCustomerHistory(),
+    getCustomerHistory(user.id),
   ]);
 
   // getCurrentCollection ya necesita el business_id del perfil, así que va
   // después del Promise.all de arriba (no puede pedirse en paralelo con él).
   const { campaign, obtainedCount } = await getCurrentCollection(
     profile?.business_id ?? null,
+    user.id,
   );
   const target = campaign?.completion_target ?? 0;
   const progressPct = target > 0 ? Math.round((obtainedCount / target) * 100) : 0;

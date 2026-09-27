@@ -41,8 +41,8 @@ export default async function HomePage() {
 
   const [{ campaign, stickers, obtainedCount }, prizes, lastSticker] =
     await Promise.all([
-      getCurrentCollection(businessId),
-      getCustomerPrizes(businessId),
+      getCurrentCollection(businessId, user.id),
+      getCustomerPrizes(businessId, user.id),
       getLastObtainedSticker(businessId, user.id),
     ]);
 
