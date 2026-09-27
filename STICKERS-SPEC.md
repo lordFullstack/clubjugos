@@ -1,6 +1,20 @@
 # STICKERS-SPEC.md — especificación de arte para vos
 
-Referencia para cuando hagas el arte de los 13 stickers (los reemplazás en `public/stickers/`, mismo nombre de archivo, y listo — el código ya los sirve por nombre, no necesitás tocar nada más). Basado en el mockup que compartiste y en cómo ya consume las imágenes el código (`components/sticker-tile.tsx`, `components/sticker-reveal-modal.tsx`).
+Referencia para cuando hagas el arte de los stickers. Basado en cómo ya consume las imágenes el código (`components/sticker-tile.tsx`, `components/sticker-reveal-modal.tsx`).
+
+## ⚠️ Corrección: cómo subir el arte de verdad
+
+**Antes decía "reemplazá el archivo en `public/stickers/` y listo" — eso está mal, lo corrijo acá.** Verificado contra la base real: el `image_url` de cada sticker en la tabla `stickers` apunta a una URL de Supabase Storage (`.../storage/v1/object/public/stickers/<uuid>.png`), generada cuando lo subís desde el panel admin — **no** al archivo estático del repo.
+
+Los 10 PNG que hoy viven en `public/stickers/*.png` (con nombres lindos tipo `mango-afan.png`) **solo se usan como vista previa hardcodeada en la landing page** (`app/page.tsx`, sección "Tu primera boleta"). Cambiar esos archivos no mueve nada en el álbum real de ningún cliente.
+
+**Para que un sticker aparezca de verdad en el álbum:**
+1. Entrá a `/admin/stickers` (rol ADMIN).
+2. "+ Nuevo sticker" (o editá uno existente).
+3. Subí el archivo ahí — el formulario ya acepta PNG, JPG y WEBP hasta 5 MB (tu `.webp` entra sin conversión).
+4. Le ponés nombre, rareza, tipo (Coleccionable/Especial) y, si es especial, el premio que otorga.
+
+Si además querés actualizar la vista previa de la landing con el nuevo estilo, ahí sí correspondería reemplazar el archivo en `public/stickers/` con el mismo nombre — pero es puramente cosmético para esa pantalla, no afecta el álbum real.
 
 ## Spec técnica (igual para los 13)
 
