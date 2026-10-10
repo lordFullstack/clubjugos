@@ -79,14 +79,14 @@ export function StickerForm({
               name="imageFile"
               accept="image/png,image/jpeg,image/webp"
               onChange={handleFileChange}
-              className="block w-full text-xs text-ink-500 file:mr-3 file:rounded-full file:border-0 file:bg-citrus-500 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-white"
+              className="block w-full text-xs text-ink-500 file:mr-3 file:rounded-full file:border-0 file:bg-citrus-700 file:px-3 file:py-1.5 file:text-xs file:font-bold file:text-white"
             />
             <p className="mt-1.5 text-[11px] text-ink-500">
               PNG, JPG o WEBP · máximo 5 MB. Sube la imagen de este sticker
               para la temporada.
             </p>
             {state.fieldErrors?.imageFile && (
-              <p className="mt-1 text-xs font-medium text-red-600">
+              <p className="mt-1 text-xs font-medium text-red-700">
                 {state.fieldErrors.imageFile}
               </p>
             )}
@@ -101,7 +101,7 @@ export function StickerForm({
           value={name}
           onChange={(e) => setName(e.target.value)}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -167,7 +167,7 @@ export function StickerForm({
             name="specialPrizeId"
             defaultValue={sticker?.specialPrizeId ?? ""}
             required
-            className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+            className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
           >
             <option value="" disabled>
               Selecciona un premio...
@@ -179,7 +179,7 @@ export function StickerForm({
             ))}
           </select>
           {prizes.length === 0 && (
-            <span className="mt-1 block text-xs font-medium text-red-600">
+            <span className="mt-1 block text-xs font-medium text-red-700">
               Primero crea un premio en la sección Premios.
             </span>
           )}
@@ -192,7 +192,7 @@ export function StickerForm({
           name="rarity"
           value={rarity}
           onChange={(e) => setRarity(e.target.value)}
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         >
           {RARITIES.map((r) => (
             <option key={r} value={r}>
@@ -208,7 +208,7 @@ export function StickerForm({
           name="description"
           defaultValue={sticker?.description ?? ""}
           rows={2}
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -224,7 +224,7 @@ export function StickerForm({
           readOnly={kind === "COLLECTIBLE"}
           tabIndex={kind === "COLLECTIBLE" ? -1 : 0}
           required
-          className={`mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm ${
+          className={`mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm ${
             kind === "COLLECTIBLE" ? "pointer-events-none bg-ink-900/5 text-ink-500" : ""
           }`}
         />
@@ -242,12 +242,12 @@ export function StickerForm({
       </label>
 
       {state.error && (
-        <p className="col-span-2 text-sm font-medium text-red-600">
+        <p className="col-span-2 text-sm font-medium text-red-700">
           {state.error}
         </p>
       )}
       {state.fieldErrors && Object.keys(state.fieldErrors).length > 0 && (
-        <ul className="col-span-2 text-sm font-medium text-red-600">
+        <ul className="col-span-2 text-sm font-medium text-red-700">
           {Object.entries(state.fieldErrors)
             .filter(([key]) => key !== "imageFile")
             .map(([key, msg]) => (
@@ -259,7 +259,7 @@ export function StickerForm({
       <button
         type="submit"
         disabled={isPending}
-        className="col-span-2 rounded-xl bg-citrus-500 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="col-span-2 min-h-11 rounded-full bg-citrus-700 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {isPending
           ? "Guardando..."

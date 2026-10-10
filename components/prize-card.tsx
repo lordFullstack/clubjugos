@@ -110,7 +110,7 @@ export function PrizeCard({
             Requiere {requiredStickers} stickers
           </p>
         )}
-        {date && <p className="mt-0.5 text-[11px] text-ink-500/80">{date}</p>}
+        {date && <p className="mt-0.5 text-[11px] text-ink-500">{date}</p>}
       </div>
       {action ?? <Badge tone={statusMeta.tone}>{statusMeta.label}</Badge>}
     </TicketCard>

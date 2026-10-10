@@ -12,7 +12,7 @@ const TONE_CLASS: Record<BadgeTone, string> = {
   neutral: "bg-ink-900/5 text-ink-500",
   success: "bg-citrus-100 text-citrus-700",
   warning: "bg-foil-light/30 text-foil-dark",
-  danger: "bg-red-50 text-red-500",
+  danger: "bg-red-50 text-red-700",
   info: "bg-jade-100 text-jade-700",
 };
 

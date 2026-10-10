@@ -41,7 +41,7 @@ function SpecialTile({
         type="button"
         onClick={onClick}
         aria-label={special.obtained ? `Ver ${special.name}` : "Sticker especial bloqueado"}
-        className="min-h-11 min-w-11 rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-special-500"
+        className="min-h-11 min-w-11 rounded-2xl transition active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-special-500"
       >
         <div
           className={`relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl ${

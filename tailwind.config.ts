@@ -132,6 +132,16 @@ const config: Config = {
           "60%": { transform: "scale(1.04) rotate(1deg)", opacity: "1" },
           "100%": { transform: "scale(1) rotate(0deg)", opacity: "1" },
         },
+        // LOOP 08: entrada suave del fondo de un modal y llenado de la barra
+        // de progreso (arranca vacía y crece hasta su valor real).
+        "fade-in": {
+          "0%": { opacity: "0" },
+          "100%": { opacity: "1" },
+        },
+        "grow-x": {
+          "0%": { transform: "scaleX(0)" },
+          "100%": { transform: "scaleX(1)" },
+        },
         // UI LOOP 03: línea de escaneo que sube y baja dentro del recuadro de
         // la cámara — refuerza "está buscando el QR" sin agregar texto extra.
         "scan-line": {
@@ -150,6 +160,8 @@ const config: Config = {
         // ~200ms despues de que aparece la card (fase 250-600ms del spec).
         "reveal-pop": "reveal-pop 0.4s cubic-bezier(0.34,1.56,0.64,1) 0.2s both",
         "scan-line": "scan-line 2.2s ease-in-out infinite",
+        "fade-in": "fade-in 0.2s ease-out",
+        "grow-x": "grow-x 0.8s cubic-bezier(0.22,1,0.36,1) 0.1s both",
       },
     },
   },

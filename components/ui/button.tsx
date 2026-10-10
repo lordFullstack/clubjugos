@@ -7,21 +7,25 @@ export type ButtonVariant =
   | "outline"
   | "outline-invert"
   | "ghost"
-  | "gold";
+  | "gold"
+  | "light";
 export type ButtonSize = "md" | "sm";
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
   primary:
-    "bg-gradient-to-b from-citrus-400 to-citrus-600 text-white shadow-soft",
+    // A11y (LOOP 08): blanco sobre citrus-400 daba 1.8:1; 600→700 da 4.7–6.8:1.
+    "bg-gradient-to-b from-citrus-600 to-citrus-700 text-white shadow-soft",
   secondary: "border-2 border-ink-900/[0.06] bg-white text-ink-700 shadow-card",
   outline: "border border-ink-900/10 text-ink-700",
   // Mismo rol que "outline" pero para usar sobre fondos oscuros (ej. la
   // card jade del modal de revelación) sin pisar sus propias clases de
   // borde/texto con un className suelto.
   "outline-invert": "border border-white/20 text-white",
-  ghost: "bg-citrus-500 text-white",
+  ghost: "bg-citrus-700 text-white",
   // CTA dorado de "Ver premio" (mockup: modal de especial y card de premio).
   gold: "bg-gradient-to-b from-foil-light to-foil text-ink-900 shadow-soft",
+  // Píldora blanca para usar sobre fondos verdes oscuros (hero de Home).
+  light: "bg-white text-citrus-800 shadow-soft",
 };
 
 const SIZE_CLASS: Record<ButtonSize, string> = {

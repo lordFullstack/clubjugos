@@ -70,19 +70,19 @@ export function QrGeneratorForm() {
             min={1}
             value={expiresHours}
             onChange={(e) => setExpiresHours(Number(e.target.value))}
-            className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm sm:max-w-xs"
+            className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm sm:max-w-xs"
           />
         </label>
 
         {error && (
-          <p className="mt-3 text-sm font-medium text-red-600">{error}</p>
+          <p className="mt-3 text-sm font-medium text-red-700">{error}</p>
         )}
 
         <button
           type="button"
           disabled={isPending}
           onClick={handleGenerate}
-          className="mt-4 w-full rounded-xl bg-citrus-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60 sm:w-auto sm:px-6"
+          className="mt-4 w-full min-h-11 rounded-full bg-citrus-700 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60 sm:w-auto sm:px-6"
         >
           {isPending ? "Generando..." : "GENERAR QR"}
         </button>
@@ -145,7 +145,7 @@ export function QrGeneratorForm() {
                 type="button"
                 onClick={handleGenerate}
                 disabled={isPending}
-                className="flex-1 rounded-xl bg-citrus-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+                className="flex-1 min-h-11 rounded-full bg-citrus-700 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
               >
                 {isPending ? "Generando..." : "GENERAR OTRO"}
               </button>

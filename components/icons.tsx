@@ -9,6 +9,9 @@ const base = {
   strokeWidth: 1.8,
   strokeLinecap: "round" as const,
   strokeLinejoin: "round" as const,
+  // Decorativos por defecto: el nombre accesible lo da el botón/link que los
+  // contiene (aria-label o texto). Se puede pisar pasando aria-hidden={false}.
+  "aria-hidden": true as const,
 };
 
 /** Inicio — un puesto/kiosco de jugos, no una casa genérica. */

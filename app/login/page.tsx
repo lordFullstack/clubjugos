@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { useActionState } from "react";
 import { BusinessLogo } from "@/components/business-logo";
+import { Button } from "@/components/ui/button";
 import { FormField } from "@/components/form-field";
 import { loginCustomer, type AuthFormState } from "@/services/auth-service";
 
@@ -19,7 +20,7 @@ export default function LoginPage() {
       <div className="mx-auto w-full max-w-sm">
         <div className="mb-8 text-center">
           <BusinessLogo size="md" priority className="mx-auto mb-4" />
-          <span className="inline-block rounded-full border-2 border-dashed border-citrus-400 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-citrus-600">
+          <span className="inline-block rounded-full border-2 border-dashed border-citrus-400 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-citrus-700">
             JugoClub
           </span>
           <h1 className="mt-4 font-display text-2xl font-extrabold text-ink-900">
@@ -49,23 +50,19 @@ export default function LoginPage() {
           />
 
           {state.error && (
-            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-600">
+            <p className="rounded-xl bg-red-50 px-4 py-3 text-sm font-medium text-red-700">
               {state.error}
             </p>
           )}
 
-          <button
-            type="submit"
-            disabled={isPending}
-            className="w-full rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98] disabled:opacity-60"
-          >
+          <Button type="submit" disabled={isPending}>
             {isPending ? "Ingresando..." : "INICIAR SESIÓN"}
-          </button>
+          </Button>
         </form>
 
         <p className="mt-6 text-center text-sm text-ink-500">
           ¿Todavía no tienes cuenta?{" "}
-          <Link href="/register" className="font-bold text-citrus-600">
+          <Link href="/register" className="font-bold text-citrus-700">
             Regístrate
           </Link>
         </p>

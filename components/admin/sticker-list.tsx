@@ -38,7 +38,7 @@ function DeleteStickerButton({ stickerId, name }: { stickerId: string; name: str
         type="button"
         onClick={() => setConfirming(true)}
         aria-label={`Eliminar ${name}`}
-        className="shrink-0 text-xs font-semibold text-red-500"
+        className="inline-flex min-h-11 items-center shrink-0 px-2 text-xs font-semibold text-red-700"
       >
         Eliminar
       </button>
@@ -46,7 +46,7 @@ function DeleteStickerButton({ stickerId, name }: { stickerId: string; name: str
   }
 
   return (
-    <div className="flex w-full flex-wrap items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-600">
+    <div className="flex w-full flex-wrap items-center gap-2 rounded-xl bg-red-50 px-3 py-2 text-xs text-red-700">
       <p className="flex-1 font-semibold">
         ¿Eliminar «{name}»? Se quita también de los álbumes de los clientes. No se
         puede deshacer.
@@ -55,7 +55,7 @@ function DeleteStickerButton({ stickerId, name }: { stickerId: string; name: str
         type="button"
         onClick={handleDelete}
         disabled={pending}
-        className="rounded-full bg-red-500 px-3 py-1.5 font-bold text-white disabled:opacity-60"
+        className="inline-flex min-h-11 items-center rounded-full bg-red-700 px-4 font-bold text-white disabled:opacity-60"
       >
         {pending ? "Eliminando..." : "Sí, eliminar"}
       </button>
@@ -63,7 +63,7 @@ function DeleteStickerButton({ stickerId, name }: { stickerId: string; name: str
         type="button"
         onClick={() => setConfirming(false)}
         disabled={pending}
-        className="font-semibold text-ink-500"
+        className="inline-flex min-h-11 items-center px-2 font-semibold text-ink-500"
       >
         Cancelar
       </button>
@@ -94,7 +94,7 @@ export function StickerList({
           <StickerForm campaignId={campaignId} prizes={prizes} />
           <button
             onClick={() => setCreating(false)}
-            className="mt-2 text-sm font-semibold text-ink-500"
+            className="mt-1 inline-flex min-h-11 items-center px-1 text-sm font-semibold text-ink-500"
           >
             Cancelar
           </button>
@@ -102,7 +102,7 @@ export function StickerList({
       ) : (
         <button
           onClick={() => setCreating(true)}
-          className="rounded-xl bg-citrus-500 px-4 py-2.5 text-sm font-bold text-white"
+          className="min-h-11 rounded-full bg-citrus-700 px-5 py-2.5 text-sm font-bold text-white"
         >
           + Nuevo sticker
         </button>
@@ -115,7 +115,7 @@ export function StickerList({
               <StickerForm campaignId={campaignId} sticker={sticker} prizes={prizes} />
               <button
                 onClick={() => setEditingId(null)}
-                className="mt-2 text-sm font-semibold text-ink-500"
+                className="mt-1 inline-flex min-h-11 items-center px-1 text-sm font-semibold text-ink-500"
               >
                 Cerrar
               </button>
@@ -159,7 +159,7 @@ export function StickerList({
                 onClick={() =>
                   toggleStickerActive(sticker.campaignStickerId, !sticker.active)
                 }
-                className="shrink-0"
+                className="inline-flex min-h-11 items-center shrink-0 px-1"
               >
                 <Badge tone={sticker.active ? "success" : "neutral"}>
                   {sticker.active ? "Activo" : "Inactivo"}
@@ -167,7 +167,7 @@ export function StickerList({
               </button>
               <button
                 onClick={() => setEditingId(sticker.id)}
-                className="shrink-0 text-xs font-semibold text-citrus-600"
+                className="inline-flex min-h-11 items-center shrink-0 px-2 text-xs font-semibold text-citrus-700"
               >
                 Editar
               </button>

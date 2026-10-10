@@ -59,7 +59,7 @@ export function SegmentedTabs({
               tabIndex={selected ? 0 : -1}
               onClick={() => setActiveId(tab.id)}
               onKeyDown={(e) => onKeyDown(e, i)}
-              className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full px-4 text-sm font-bold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-citrus-500 ${
+              className={`inline-flex min-h-11 flex-1 items-center justify-center gap-1.5 rounded-full px-4 text-sm font-bold transition active:scale-[0.97] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-citrus-500 ${
                 selected
                   ? "bg-citrus-600 text-white shadow-card"
                   : "bg-white text-ink-500 ring-1 ring-ink-900/5"

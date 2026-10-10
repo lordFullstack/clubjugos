@@ -31,7 +31,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
           name="name"
           defaultValue={campaign?.name}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -41,7 +41,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
           name="description"
           defaultValue={campaign?.description ?? ""}
           rows={2}
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -52,7 +52,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
           name="start_date"
           defaultValue={campaign?.start_date}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -63,10 +63,10 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
           name="end_date"
           defaultValue={campaign?.end_date}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
         {state.fieldErrors?.end_date && (
-          <span className="mt-1 block text-xs font-medium text-red-600">
+          <span className="mt-1 block text-xs font-medium text-red-700">
             {state.fieldErrors.end_date}
           </span>
         )}
@@ -81,7 +81,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
           max={50}
           defaultValue={campaign?.completion_target ?? 8}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -90,7 +90,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
         <select
           name="status"
           defaultValue={campaign?.status ?? "draft"}
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         >
           {STATUS_OPTIONS.map((opt) => (
             <option key={opt.value} value={opt.value}>
@@ -101,7 +101,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
       </label>
 
       {state.error && (
-        <p className="col-span-full text-sm font-medium text-red-600">
+        <p className="col-span-full text-sm font-medium text-red-700">
           {state.error}
         </p>
       )}
@@ -109,7 +109,7 @@ export function CampaignForm({ campaign }: { campaign: CampaignRow | null }) {
       <button
         type="submit"
         disabled={isPending}
-        className="col-span-full rounded-xl bg-citrus-500 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="col-span-full min-h-11 rounded-full bg-citrus-700 py-3 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {isPending
           ? "Guardando..."
