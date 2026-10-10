@@ -30,10 +30,14 @@ export function FormField({
         autoComplete={autoComplete}
         placeholder={placeholder}
         required
-        className="w-full rounded-2xl border-2 border-ink-900/[0.06] bg-white px-4 py-3.5 text-base text-ink-900 shadow-card outline-none transition placeholder:text-ink-500/50 focus:border-citrus-400"
+        aria-invalid={error ? true : undefined}
+        aria-describedby={error ? `${name}-error` : undefined}
+        className="w-full rounded-2xl border-2 border-ink-900/[0.06] bg-white px-4 py-3.5 text-base text-ink-900 shadow-card outline-none transition placeholder:text-ink-500/60 focus:border-citrus-600 focus:ring-4 focus:ring-citrus-200/70"
       />
       {error && (
-        <p className="mt-1.5 text-sm font-medium text-red-600">{error}</p>
+        <p id={`${name}-error`} role="alert" className="mt-1.5 text-sm font-medium text-red-700">
+          {error}
+        </p>
       )}
     </div>
   );

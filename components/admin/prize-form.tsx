@@ -21,7 +21,7 @@ export function PrizeForm({ prize }: { prize?: AdminPrizeRow }) {
           name="name"
           defaultValue={prize?.name}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -31,7 +31,7 @@ export function PrizeForm({ prize }: { prize?: AdminPrizeRow }) {
           name="description"
           defaultValue={prize?.description ?? ""}
           rows={2}
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -44,7 +44,7 @@ export function PrizeForm({ prize }: { prize?: AdminPrizeRow }) {
           max={50}
           defaultValue={prize?.required_stickers ?? 8}
           required
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -56,7 +56,7 @@ export function PrizeForm({ prize }: { prize?: AdminPrizeRow }) {
           min={0}
           step="0.01"
           defaultValue={prize?.max_value ?? ""}
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
@@ -67,17 +67,17 @@ export function PrizeForm({ prize }: { prize?: AdminPrizeRow }) {
           type="number"
           min={1}
           defaultValue={prize?.expires_days ?? 30}
-          className="mt-1 w-full rounded-xl border border-black/10 px-3 py-2 text-sm"
+          className="mt-1 w-full min-h-11 rounded-xl border border-black/10 px-3 py-2 text-base sm:text-sm"
         />
       </label>
 
       {state.error && (
-        <p className="col-span-2 text-sm font-medium text-red-600">
+        <p className="col-span-2 text-sm font-medium text-red-700">
           {state.error}
         </p>
       )}
       {state.fieldErrors && Object.keys(state.fieldErrors).length > 0 && (
-        <ul className="col-span-2 text-sm font-medium text-red-600">
+        <ul className="col-span-2 text-sm font-medium text-red-700">
           {Object.values(state.fieldErrors).map((msg, i) => (
             <li key={i}>{msg}</li>
           ))}
@@ -87,7 +87,7 @@ export function PrizeForm({ prize }: { prize?: AdminPrizeRow }) {
       <button
         type="submit"
         disabled={isPending}
-        className="col-span-2 rounded-xl bg-citrus-500 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
+        className="col-span-2 min-h-11 rounded-full bg-citrus-700 py-2.5 text-sm font-bold text-white transition active:scale-[0.98] disabled:opacity-60"
       >
         {isPending ? "Guardando..." : prize ? "Guardar cambios" : "Crear premio"}
       </button>

@@ -48,7 +48,7 @@
 
   --color-ink-900: 17 24 21;
   --color-ink-700: 61 71 66;
-  --color-ink-500: 111 122 116;
+  --color-ink-500: 96 107 101;
 
   --color-citrus-50: 239 250 244;
   --color-citrus-100: 215 244 228;
@@ -76,7 +76,7 @@
 
   --color-foil-light: 255 217 107;
   --color-foil: 245 189 20;
-  --color-foil-dark: 168 122 8;
+  --color-foil-dark: 138 100 6;
 
   --color-guava-light: 252 194 228;
   --color-guava: 214 60 140;
@@ -140,6 +140,14 @@ body {
 
 body {
   @apply bg-paper-100 text-ink-900 antialiased;
+}
+
+/* LOOP 08 (a11y): anillo de foco de respaldo para todo lo interactivo que no
+   defina el suyo. `:where` le da especificidad 0, así que cualquier
+   `focus-visible:outline-*` propio de un componente lo reemplaza. */
+:where(a, button, input, select, textarea, summary, [tabindex]):focus-visible {
+  outline: 2px solid rgb(var(--color-citrus-700));
+  outline-offset: 2px;
 }
 
 /* Evita el "tap highlight" gris en mobile para que la app se sienta nativa */

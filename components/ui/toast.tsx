@@ -25,7 +25,7 @@ export function Toast({
 }) {
   const KIND_CLASS: Record<"light" | "dark", Record<typeof kind, string>> = {
     light: {
-      error: "bg-red-50 text-red-600",
+      error: "bg-red-50 text-red-700",
       success: "bg-jade-50 text-jade-600",
       info: "bg-citrus-50 text-citrus-700",
     },
@@ -39,7 +39,7 @@ export function Toast({
   return (
     <p
       role="status"
-      className={`rounded-2xl px-4 py-3 text-sm font-medium ${KIND_CLASS[tone][kind]} ${className}`}
+      className={`animate-tear-in rounded-2xl px-4 py-3 text-sm font-medium ${KIND_CLASS[tone][kind]} ${className}`}
     >
       {children}
     </p>

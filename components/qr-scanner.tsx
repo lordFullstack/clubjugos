@@ -134,7 +134,7 @@ export function QrScanner() {
           <span className="absolute right-0 top-0 h-8 w-8 rounded-tr-2xl border-r-4 border-t-4 border-white" />
           <span className="absolute bottom-0 left-0 h-8 w-8 rounded-bl-2xl border-b-4 border-l-4 border-white" />
           <span className="absolute bottom-0 right-0 h-8 w-8 rounded-br-2xl border-b-4 border-r-4 border-white" />
-          <div className="absolute inset-x-0 top-0 h-0.5 animate-scan-line bg-citrus-400 shadow-[0_0_10px_2px_rgba(229,81,26,0.7)]" />
+          <div className="absolute inset-x-0 top-0 h-0.5 animate-scan-line bg-citrus-400 shadow-[0_0_10px_2px_rgba(49,221,128,0.7)]" />
         </div>
       )}
       {status === "requesting" && (

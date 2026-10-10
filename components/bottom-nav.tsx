@@ -33,7 +33,7 @@ export function BottomNav() {
                   href={href}
                   size="lg"
                   aria-label="Escanear QR"
-                  className="border-4 border-paper-100 bg-gradient-to-b from-citrus-400 to-citrus-600 text-white shadow-soft"
+                  className="border-4 border-paper-100 bg-gradient-to-b from-citrus-500 to-citrus-700 text-white shadow-soft"
                 >
                   <Icon className="h-7 w-7" strokeWidth={2} />
                 </IconButton>
@@ -47,7 +47,7 @@ export function BottomNav() {
               <Link
                 href={href}
                 className={`flex flex-col items-center gap-1 rounded-2xl px-3 py-1.5 text-[11px] font-bold transition active:scale-90 active:bg-ink-900/5 ${
-                  active ? "text-citrus-600" : "text-ink-500"
+                  active ? "text-citrus-700" : "text-ink-500"
                 }`}
               >
                 <Icon

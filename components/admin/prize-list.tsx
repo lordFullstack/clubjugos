@@ -17,7 +17,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
           <PrizeForm />
           <button
             onClick={() => setCreating(false)}
-            className="mt-2 text-sm font-semibold text-ink-500"
+            className="mt-1 inline-flex min-h-11 items-center px-1 text-sm font-semibold text-ink-500"
           >
             Cancelar
           </button>
@@ -25,7 +25,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
       ) : (
         <button
           onClick={() => setCreating(true)}
-          className="rounded-xl bg-citrus-500 px-4 py-2.5 text-sm font-bold text-white"
+          className="min-h-11 rounded-full bg-citrus-700 px-5 py-2.5 text-sm font-bold text-white"
         >
           + Nuevo premio
         </button>
@@ -38,7 +38,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
               <PrizeForm prize={prize} />
               <button
                 onClick={() => setEditingId(null)}
-                className="mt-2 text-sm font-semibold text-ink-500"
+                className="mt-1 inline-flex min-h-11 items-center px-1 text-sm font-semibold text-ink-500"
               >
                 Cerrar
               </button>
@@ -63,7 +63,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
                 onClick={() =>
                   togglePrizeActive(prize.id, prize.status !== "active")
                 }
-                className="shrink-0"
+                className="inline-flex min-h-11 items-center shrink-0 px-1"
               >
                 <Badge tone={prize.status === "active" ? "success" : "neutral"}>
                   {prize.status === "active" ? "Activo" : "Inactivo"}
@@ -71,7 +71,7 @@ export function PrizeList({ prizes }: { prizes: AdminPrizeRow[] }) {
               </button>
               <button
                 onClick={() => setEditingId(prize.id)}
-                className="shrink-0 text-xs font-semibold text-citrus-600"
+                className="inline-flex min-h-11 items-center shrink-0 px-2 text-xs font-semibold text-citrus-700"
               >
                 Editar
               </button>

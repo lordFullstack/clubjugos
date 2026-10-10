@@ -64,7 +64,7 @@ export default async function AdminCustomersPage() {
               >
                 <div className="flex items-center justify-between gap-3">
                   <p className="truncate font-semibold text-ink-900">{c.name}</p>
-                  <span className="shrink-0 font-mono text-xs font-bold text-citrus-600">
+                  <span className="shrink-0 font-mono text-xs font-bold text-citrus-700">
                     {c.stickerCount} stickers
                   </span>
                 </div>

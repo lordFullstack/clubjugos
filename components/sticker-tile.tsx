@@ -67,7 +67,7 @@ export function StickerTile({
           type="button"
           onClick={onClick}
           aria-label={sticker.obtained ? `Ver ${sticker.name}` : "Sticker bloqueado"}
-          className="min-h-11 min-w-11 w-full rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-citrus-500"
+          className="min-h-11 min-w-11 w-full rounded-2xl transition active:scale-95 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-citrus-500"
         >
           {tile}
         </button>

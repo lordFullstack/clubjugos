@@ -4,7 +4,7 @@ import { getRecentQrTokens, type QrTokenStatus } from "@/services/qr-service";
 const STATUS_LABEL: Record<QrTokenStatus, { label: string; className: string }> = {
   AVAILABLE: { label: "No utilizado", className: "bg-citrus-100 text-citrus-700" },
   USED: { label: "Utilizado", className: "bg-jade-100 text-jade-700" },
-  EXPIRED: { label: "Expirado", className: "bg-red-50 text-red-500" },
+  EXPIRED: { label: "Expirado", className: "bg-red-50 text-red-700" },
   CANCELLED: { label: "Cancelado", className: "bg-ink-900/5 text-ink-500" },
 };
 

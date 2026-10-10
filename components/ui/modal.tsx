@@ -66,7 +66,7 @@ export function Modal({
 
   return (
     <div
-      className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4"
+      className="fixed inset-0 z-50 flex animate-fade-in items-center justify-center bg-black/50 p-4"
       onClick={closeOnBackdrop ? onClose : undefined}
     >
       <div
@@ -76,7 +76,7 @@ export function Modal({
         aria-label={title}
         tabIndex={-1}
         onClick={(e) => e.stopPropagation()}
-        className={`w-full max-w-sm rounded-3xl outline-none ${className}`}
+        className={`w-full max-w-sm animate-pop-in rounded-3xl outline-none ${className}`}
       >
         {children}
       </div>

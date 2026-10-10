@@ -1,6 +1,7 @@
 import Link from "next/link";
 import Image from "next/image";
 import { BusinessLogo } from "@/components/business-logo";
+import { Button } from "@/components/ui/button";
 
 const PREVIEW_STICKERS = [
   "/stickers/mango-afan.png",
@@ -21,7 +22,7 @@ export default function LandingPage() {
       <div className="relative flex flex-1 flex-col items-center justify-center text-center">
         <BusinessLogo size="lg" priority className="mb-6" />
 
-        <span className="rounded-full border-2 border-dashed border-citrus-400 px-4 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-citrus-600">
+        <span className="rounded-full border-2 border-dashed border-citrus-400 px-4 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-citrus-700">
           Club de clientes frecuentes
         </span>
 
@@ -61,15 +62,10 @@ export default function LandingPage() {
 
       {/* CTA principal */}
       <div className="relative w-full max-w-sm space-y-3 self-center pb-4">
-        <Link
-          href="/register"
-          className="block w-full rounded-2xl bg-gradient-to-b from-citrus-400 to-citrus-600 py-4 text-center text-base font-bold text-white shadow-soft transition active:scale-[0.98]"
-        >
-          COMENZAR
-        </Link>
+        <Button href="/register">COMENZAR</Button>
         <Link
           href="/login"
-          className="block w-full py-2 text-center text-sm font-bold text-ink-500"
+          className="flex min-h-11 w-full items-center justify-center text-center text-sm font-bold text-ink-500"
         >
           Ya tengo una cuenta
         </Link>

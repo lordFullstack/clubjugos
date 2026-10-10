@@ -76,7 +76,7 @@ export default async function HomePage() {
           <BusinessLogo size="sm" className="shrink-0" />
         </header>
 
-        <Button href="/scan" className="mt-6">
+        <Button href="/scan" variant="light" className="mt-6">
           <IconScan className="h-5 w-5" strokeWidth={2.1} />
           ESCANEAR QR
         </Button>
@@ -86,7 +86,7 @@ export default async function HomePage() {
             <TicketCard className="px-5 pb-5">
               <div className="flex items-start justify-between gap-3">
                 <div>
-                  <p className="text-xs font-bold uppercase tracking-wide text-citrus-600">
+                  <p className="text-xs font-bold uppercase tracking-wide text-citrus-700">
                     Colección activa
                   </p>
                   <h2 className="mt-0.5 font-display text-base font-bold text-ink-700">
