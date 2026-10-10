@@ -3,14 +3,14 @@ import { createClient } from "@/lib/supabase/server";
 import {
   getCustomerProfile,
   getCurrentCollection,
-  getSpecialWins,
+  getCampaignSpecials,
 } from "@/services/customer-service";
 import { StickerAlbumGrid } from "@/components/sticker-album-grid";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
-import { IconAlbum, IconGift } from "@/components/icons";
-import Image from "next/image";
+import { IconAlbum } from "@/components/icons";
+import { SpecialAlbum } from "@/components/special-album";
 import { EmptyState } from "@/components/ui/empty-state";
 
 export default async function CollectionPage() {
@@ -24,9 +24,9 @@ export default async function CollectionPage() {
   }
 
   const profile = await getCustomerProfile(user.id);
-  const [{ campaign, stickers, obtainedCount }, specialWins] = await Promise.all([
+  const [{ campaign, stickers, obtainedCount }, specials] = await Promise.all([
     getCurrentCollection(profile?.business_id ?? null, user.id),
-    getSpecialWins(profile?.business_id ?? null),
+    getCampaignSpecials(profile?.business_id ?? null, user.id),
   ]);
 
   const target = campaign?.completion_target ?? 0;
@@ -78,42 +78,7 @@ export default async function CollectionPage() {
         </TicketCard>
       )}
 
-      {specialWins.length > 0 && (
-        <section className="mt-6">
-          <h2 className="font-display text-lg font-extrabold text-ink-900">
-            ⚡ Especiales ganados
-          </h2>
-          <TicketCard className="mt-3 px-5 pb-5" tone="jade">
-            <div className="grid grid-cols-4 gap-3">
-              {specialWins.map((win) => (
-                <div key={win.id} className="flex flex-col items-center gap-1">
-                  <div className="relative flex h-20 w-20 items-center justify-center overflow-hidden rounded-2xl bg-white/10 ring-2 ring-foil-light/50 shadow-card">
-                    {win.image_url ? (
-                      <Image
-                        src={win.image_url}
-                        alt={win.name}
-                        width={48}
-                        height={48}
-                        className="object-contain"
-                      />
-                    ) : (
-                      <IconGift className="h-8 w-8 text-foil-light" strokeWidth={1.6} />
-                    )}
-                  </div>
-                  <span className="max-w-full truncate text-center text-xs font-semibold text-white">
-                    {win.name}
-                  </span>
-                  {win.count > 1 && (
-                    <span className="rounded-full bg-white/15 px-1.5 font-mono text-[10px] font-bold text-foil-light">
-                      x{win.count}
-                    </span>
-                  )}
-                </div>
-              ))}
-            </div>
-          </TicketCard>
-        </section>
-      )}
+      {specials.length > 0 && <SpecialAlbum specials={specials} />}
 
       <BottomNav />
     </main>

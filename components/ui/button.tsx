@@ -1,7 +1,13 @@
 import type { ButtonHTMLAttributes, ReactNode } from "react";
 import Link from "next/link";
 
-export type ButtonVariant = "primary" | "secondary" | "outline" | "outline-invert" | "ghost";
+export type ButtonVariant =
+  | "primary"
+  | "secondary"
+  | "outline"
+  | "outline-invert"
+  | "ghost"
+  | "gold";
 export type ButtonSize = "md" | "sm";
 
 const VARIANT_CLASS: Record<ButtonVariant, string> = {
@@ -14,6 +20,8 @@ const VARIANT_CLASS: Record<ButtonVariant, string> = {
   // borde/texto con un className suelto.
   "outline-invert": "border border-white/20 text-white",
   ghost: "bg-citrus-500 text-white",
+  // CTA dorado de "Ver premio" (mockup: modal de especial y card de premio).
+  gold: "bg-gradient-to-b from-foil-light to-foil text-ink-900 shadow-soft",
 };
 
 const SIZE_CLASS: Record<ButtonSize, string> = {

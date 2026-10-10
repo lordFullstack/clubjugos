@@ -23,7 +23,9 @@ export function StickerTile({
   size?: "sm" | "md";
   onClick?: () => void;
 }) {
-  const cellClass = size === "sm" ? "h-14 w-14" : "h-20 w-20";
+  // md se adapta a la columna del grid (máx. 80px): con 4 columnas a 375px
+  // las casillas fijas de 80px se pisaban entre sí.
+  const cellClass = size === "sm" ? "h-14 w-14" : "mx-auto aspect-square w-full max-w-20";
   const imgSize = size === "sm" ? 32 : 48;
   const meta = sticker.obtained ? getRarityMeta(sticker.rarity) : null;
 
@@ -42,7 +44,7 @@ export function StickerTile({
             alt={sticker.name}
             width={imgSize}
             height={imgSize}
-            className="object-contain"
+            className="h-[62%] w-[62%] object-contain"
           />
         ) : (
           <IconAlbum
@@ -59,13 +61,13 @@ export function StickerTile({
   );
 
   return (
-    <div className="flex flex-col items-center gap-1">
+    <div className={`flex flex-col items-center gap-1 ${size === "md" ? "w-full" : ""}`}>
       {onClick ? (
         <button
           type="button"
           onClick={onClick}
           aria-label={sticker.obtained ? `Ver ${sticker.name}` : "Sticker bloqueado"}
-          className="min-h-11 min-w-11 rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-citrus-500"
+          className="min-h-11 min-w-11 w-full rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-citrus-500"
         >
           {tile}
         </button>

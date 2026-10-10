@@ -174,22 +174,36 @@ export async function getLastObtainedSticker(
   };
 }
 
-export type SpecialWin = {
+export type SpecialSticker = {
   id: string;
   name: string;
   image_url: string | null;
   rarity: string;
+  obtained: boolean;
+  /** Cuántas veces cayó (un especial puede repetirse). 0 si no lo tiene. */
   count: number;
-  obtainedAt: string;
+  obtainedAt: string | null;
+  /** Premio que otorga este especial y su estado para ESTE cliente. */
+  prize: { id: string; name: string; status: PrizeStatus | "LOCKED" } | null;
 };
 
 /**
- * Stickers especiales que el cliente ya ganó (independientes del álbum).
- * Se agrupan por sticker porque un mismo especial puede caer más de una vez.
+ * LOOP 05 — todos los stickers especiales de la campaña activa, tanto los
+ * que el cliente ya ganó como los que todavía no (se pintan bloqueados:
+ * igual que en el álbum, la UI no revela cuál es hasta que cae). Incluye
+ * el premio asociado y su estado, leído de `customer_prizes`: el frontend
+ * nunca decide si un premio está desbloqueado, solo muestra lo que el
+ * backend (`redeem_qr_token`) ya grabó.
+ *
+ * Un especial que el admin desactivó después de que el cliente lo ganó se
+ * sigue mostrando (ya es suyo); uno inactivo que no ganó no aparece.
+ * Filtro explícito por `customer_id` además de RLS, como el resto de las
+ * lecturas del AUDIT (LOOP 08).
  */
-export async function getSpecialWins(
+export async function getCampaignSpecials(
   businessId: string | null,
-): Promise<SpecialWin[]> {
+  customerId: string,
+): Promise<SpecialSticker[]> {
   if (!businessId) return [];
 
   const supabase = await createClient();
@@ -203,33 +217,89 @@ export async function getSpecialWins(
 
   if (!campaign) return [];
 
-  const { data } = await supabase
-    .from("customer_stickers")
-    .select("obtained_at, stickers!inner(id, name, image_url, rarity, kind)")
+  const { data: specials } = await supabase
+    .from("campaign_stickers")
+    .select(
+      "sticker_id, status, stickers!inner(id, name, image_url, rarity, kind, special_prize_id)",
+    )
     .eq("campaign_id", campaign.id)
-    .eq("stickers.kind", "SPECIAL")
-    .order("obtained_at", { ascending: false });
+    .eq("stickers.kind", "SPECIAL");
 
-  const byId = new Map<string, SpecialWin>();
-  for (const row of data ?? []) {
-    const sticker = Array.isArray(row.stickers) ? row.stickers[0] : row.stickers;
-    if (!sticker) continue;
-    const existing = byId.get(sticker.id);
+  const { data: wins } = await supabase
+    .from("customer_stickers")
+    .select("sticker_id, obtained_at")
+    .eq("campaign_id", campaign.id)
+    .eq("customer_id", customerId);
+
+  const winsByStickerId = new Map<string, { count: number; first: string }>();
+  for (const row of wins ?? []) {
+    const existing = winsByStickerId.get(row.sticker_id);
     if (existing) {
       existing.count += 1;
+      if (row.obtained_at < existing.first) existing.first = row.obtained_at;
     } else {
-      byId.set(sticker.id, {
-        id: sticker.id,
-        name: sticker.name,
-        image_url: sticker.image_url,
-        rarity: sticker.rarity,
-        count: 1,
-        obtainedAt: row.obtained_at,
-      });
+      winsByStickerId.set(row.sticker_id, { count: 1, first: row.obtained_at });
     }
   }
 
-  return Array.from(byId.values());
+  const rows = (specials ?? [])
+    .map((cs) => {
+      const sticker = Array.isArray(cs.stickers) ? cs.stickers[0] : cs.stickers;
+      return sticker ? { status: cs.status, sticker } : null;
+    })
+    .filter((r): r is NonNullable<typeof r> => r !== null)
+    .filter((r) => r.status === "active" || winsByStickerId.has(r.sticker.id));
+
+  const prizeIds = Array.from(
+    new Set(
+      rows
+        .map((r) => r.sticker.special_prize_id)
+        .filter((id): id is string => !!id),
+    ),
+  );
+
+  const prizeNameById = new Map<string, string>();
+  const prizeStatusById = new Map<string, PrizeStatus>();
+  if (prizeIds.length > 0) {
+    const { data: prizes } = await supabase
+      .from("prizes")
+      .select("id, name")
+      .in("id", prizeIds);
+    for (const p of prizes ?? []) prizeNameById.set(p.id, p.name);
+
+    const { data: customerPrizes } = await supabase
+      .from("customer_prizes")
+      .select("prize_id, status")
+      .eq("customer_id", customerId)
+      .in("prize_id", prizeIds);
+    for (const cp of customerPrizes ?? []) {
+      prizeStatusById.set(cp.prize_id, cp.status as PrizeStatus);
+    }
+  }
+
+  const result: SpecialSticker[] = rows.map(({ sticker }) => {
+    const win = winsByStickerId.get(sticker.id);
+    const prizeId = sticker.special_prize_id;
+    const prizeName = prizeId ? prizeNameById.get(prizeId) : undefined;
+    return {
+      id: sticker.id,
+      name: sticker.name,
+      image_url: sticker.image_url,
+      rarity: sticker.rarity,
+      obtained: !!win,
+      count: win?.count ?? 0,
+      obtainedAt: win?.first ?? null,
+      prize:
+        prizeId && prizeName
+          ? { id: prizeId, name: prizeName, status: prizeStatusById.get(prizeId) ?? "LOCKED" }
+          : null,
+    };
+  });
+
+  // Los ganados primero; dentro de cada grupo, por nombre.
+  return result.sort(
+    (a, b) => Number(b.obtained) - Number(a.obtained) || a.name.localeCompare(b.name),
+  );
 }
 
 export type PrizeStatus = "LOCKED" | "AVAILABLE" | "REDEEMED" | "EXPIRED";
