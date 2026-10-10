@@ -1,5 +1,6 @@
 import Link from "next/link";
 import Image from "next/image";
+import { BusinessLogo } from "@/components/business-logo";
 
 const PREVIEW_STICKERS = [
   "/stickers/mango-afan.png",
@@ -18,6 +19,8 @@ export default function LandingPage() {
       />
 
       <div className="relative flex flex-1 flex-col items-center justify-center text-center">
+        <BusinessLogo size="lg" priority className="mb-6" />
+
         <span className="rounded-full border-2 border-dashed border-citrus-400 px-4 py-1 font-mono text-[11px] font-bold uppercase tracking-[0.2em] text-citrus-600">
           Club de clientes frecuentes
         </span>
@@ -32,7 +35,6 @@ export default function LandingPage() {
 
         {/* Boleta con stickers de vista previa — establece la metáfora del álbum */}
         <div className="relative mt-9 w-full max-w-[280px] animate-float overflow-hidden rounded-4xl bg-white pt-4 shadow-ticket">
-          <div className="ticket-notch-top" aria-hidden />
           <p className="px-5 text-left font-display text-xs font-bold uppercase tracking-wide text-citrus-500">
             Tu primera boleta
           </p>

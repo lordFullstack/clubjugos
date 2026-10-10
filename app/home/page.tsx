@@ -10,6 +10,7 @@ import {
 } from "@/services/customer-service";
 import { ProgressBar } from "@/components/progress-bar";
 import { BottomNav } from "@/components/bottom-nav";
+import { BusinessLogo } from "@/components/business-logo";
 import { TicketCard, TicketDivider, StampBadge } from "@/components/ticket-card";
 import { IconJuiceCup, IconScan, IconGift, IconAlbum } from "@/components/icons";
 import { Button } from "@/components/ui/button";
@@ -60,16 +61,19 @@ export default async function HomePage() {
           muestra literalmente). El resto de la página sigue en el fondo
           neutro. */}
       <div className="rounded-b-[2.5rem] bg-gradient-to-b from-citrus-700 to-citrus-900 px-6 pb-8 pt-8 text-white shadow-card">
-        <header>
-          <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-citrus-100">
-            Hola
-          </p>
-          <h1 className="font-display text-3xl font-black text-white">
-            {firstName}
-          </h1>
-          <p className="mt-1 text-sm text-white/70">
-            Escanea, colecciona y gana
-          </p>
+        <header className="flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <p className="font-mono text-xs font-bold uppercase tracking-[0.2em] text-citrus-100">
+              Hola
+            </p>
+            <h1 className="truncate font-display text-3xl font-black text-white">
+              {firstName}
+            </h1>
+            <p className="mt-1 text-sm text-white/70">
+              Escanea, colecciona y gana
+            </p>
+          </div>
+          <BusinessLogo size="sm" className="shrink-0" />
         </header>
 
         <Button href="/scan" className="mt-6">
