@@ -67,7 +67,7 @@ export default async function AdminDashboardPage() {
                   className={`text-xs ${item.success ? "text-ink-500" : "text-red-500"}`}
                 >
                   {item.success
-                    ? `Obtuvo: ${item.stickerName}`
+                    ? `Obtuvo: ${item.stickerName ?? "un sticker que ya fue eliminado"}`
                     : item.failureReason}
                 </p>
               </div>
