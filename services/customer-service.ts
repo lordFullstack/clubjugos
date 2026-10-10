@@ -309,6 +309,12 @@ export type PrizeView = {
   name: string;
   description: string | null;
   required_stickers: number;
+  /** "SPECIAL" si lo otorga un sticker especial (ahí `required_stickers` no
+   * aplica: se gana por suerte, no por completar el álbum). */
+  source: "ALBUM" | "SPECIAL";
+  /** Imagen propia del premio o, si ya lo ganó, la del sticker especial que
+   * lo otorga. Nunca la del sticker mientras el premio siga bloqueado. */
+  imageUrl: string | null;
   status: PrizeStatus;
   customerPrizeId: string | null;
   earnedAt: string | null;
@@ -337,9 +343,25 @@ export async function getCustomerPrizes(
 
   const { data: prizes } = await supabase
     .from("prizes")
-    .select("id, name, description, required_stickers")
+    .select("id, name, description, required_stickers, image_url")
     .eq("business_id", businessId)
     .eq("status", "active");
+
+  // Qué premios los da un sticker especial (y con qué imagen) — LOOP 06.
+  const prizeIds = (prizes ?? []).map((p) => p.id);
+  const specialByPrizeId = new Map<string, string | null>();
+  if (prizeIds.length > 0) {
+    const { data: specialStickers } = await supabase
+      .from("stickers")
+      .select("special_prize_id, image_url")
+      .eq("kind", "SPECIAL")
+      .in("special_prize_id", prizeIds);
+    for (const st of specialStickers ?? []) {
+      if (st.special_prize_id) {
+        specialByPrizeId.set(st.special_prize_id, st.image_url);
+      }
+    }
+  }
 
   const { data: customerPrizes } = await supabase
     .from("customer_prizes")
@@ -364,9 +386,16 @@ export async function getCustomerPrizes(
 
   return (prizes ?? []).map((prize) => {
     const cp = byPrizeId.get(prize.id);
+    const status = (cp?.status as PrizeStatus) ?? "LOCKED";
+    const isSpecial = specialByPrizeId.has(prize.id);
+    const { image_url, ...rest } = prize;
     return {
-      ...prize,
-      status: (cp?.status as PrizeStatus) ?? "LOCKED",
+      ...rest,
+      source: isSpecial ? ("SPECIAL" as const) : ("ALBUM" as const),
+      imageUrl:
+        image_url ??
+        (isSpecial && status !== "LOCKED" ? specialByPrizeId.get(prize.id) ?? null : null),
+      status,
       customerPrizeId: cp?.id ?? null,
       earnedAt: cp?.earned_at ?? null,
       expiresAt: cp?.expires_at ?? null,
