@@ -158,6 +158,62 @@ export async function saveSticker(
   return {};
 }
 
+const STICKER_BUCKET_PREFIX = "/storage/v1/object/public/stickers/";
+
+/**
+ * Elimina un sticker por completo: lo que los clientes ya obtuvieron de él,
+ * su vínculo con campañas y el registro. Las FK de `customer_stickers` y
+ * `campaign_stickers` son `on delete restrict`, así que hay que borrar en
+ * ese orden. `scan_events.sticker_id` pasa a null solo (on delete set null)
+ * y el premio de un especial NO se toca — se gestiona en /admin/prizes.
+ * Irreversible: la UI pide confirmación antes de llamarla.
+ */
+export async function deleteSticker(
+  stickerId: string,
+): Promise<{ error?: string }> {
+  const auth = await requireStaff(["ADMIN"]);
+  if ("error" in auth) return { error: auth.error };
+
+  const service = createServiceClient();
+
+  const { data: sticker } = await service
+    .from("stickers")
+    .select("image_url")
+    .eq("id", stickerId)
+    .maybeSingle();
+
+  const { error: ownedError } = await service
+    .from("customer_stickers")
+    .delete()
+    .eq("sticker_id", stickerId);
+  if (ownedError) return { error: "No se pudo quitar el sticker de los álbumes." };
+
+  const { error: linkError } = await service
+    .from("campaign_stickers")
+    .delete()
+    .eq("sticker_id", stickerId);
+  if (linkError) return { error: "No se pudo quitar el sticker de la campaña." };
+
+  const { error } = await service.from("stickers").delete().eq("id", stickerId);
+  if (error) return { error: "No se pudo eliminar el sticker." };
+
+  // Limpieza de la imagen en Storage — best effort: si falla, el sticker ya
+  // no existe y un archivo huérfano no afecta a nadie.
+  const imageUrl = sticker?.image_url;
+  if (imageUrl) {
+    const idx = imageUrl.indexOf(STICKER_BUCKET_PREFIX);
+    if (idx !== -1) {
+      const path = imageUrl.slice(idx + STICKER_BUCKET_PREFIX.length);
+      await service.storage.from("stickers").remove([path]);
+    }
+  }
+
+  revalidatePath("/admin/stickers");
+  revalidatePath("/collection");
+  revalidatePath("/home");
+  return {};
+}
+
 export async function toggleStickerActive(
   campaignStickerId: string,
   nextActive: boolean,
