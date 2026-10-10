@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useActionState } from "react";
+import { BusinessLogo } from "@/components/business-logo";
 import { FormField } from "@/components/form-field";
 import { registerCustomer, type AuthFormState } from "@/services/auth-service";
 
@@ -17,6 +18,7 @@ export default function RegisterPage() {
     <main className="flex min-h-screen flex-col justify-center bg-paper-100 px-6 py-10">
       <div className="mx-auto w-full max-w-sm">
         <div className="mb-8 text-center">
+          <BusinessLogo size="md" priority className="mx-auto mb-4" />
           <span className="inline-block rounded-full border-2 border-dashed border-citrus-400 px-3 py-1 font-mono text-[10px] font-bold uppercase tracking-[0.2em] text-citrus-600">
             JugoClub
           </span>
