@@ -161,12 +161,18 @@ export async function saveSticker(
 const STICKER_BUCKET_PREFIX = "/storage/v1/object/public/stickers/";
 
 /**
- * Elimina un sticker por completo: lo que los clientes ya obtuvieron de él,
- * su vínculo con campañas y el registro. Las FK de `customer_stickers` y
- * `campaign_stickers` son `on delete restrict`, así que hay que borrar en
- * ese orden. `scan_events.sticker_id` pasa a null solo (on delete set null)
- * y el premio de un especial NO se toca — se gestiona en /admin/prizes.
- * Irreversible: la UI pide confirmación antes de llamarla.
+ * Elimina un sticker que NADIE tiene todavía. Si algún cliente ya lo
+ * obtuvo, se rechaza: borrarlo lo sacaba también de su álbum (las FK de
+ * `customer_stickers` son `on delete restrict`, así que antes había que
+ * borrar esas filas a mano) y una vez ya se perdieron 11 stickers de
+ * clientes así. Para esos casos: editar el sticker (cambiar nombre/arte,
+ * los clientes lo conservan) o desactivarlo (deja de salir en el sorteo).
+ *
+ * La comprobación vive acá, en el servidor, no solo en la UI: la lista
+ * puede estar desactualizada o la acción invocarse directo.
+ * `campaign_stickers` (el vínculo con la campaña) sí se borra; las filas de
+ * `scan_events` quedan con `sticker_id` en null (on delete set null) y el
+ * premio de un especial no se toca (se gestiona en /admin/prizes).
  */
 export async function deleteSticker(
   stickerId: string,
@@ -176,17 +182,27 @@ export async function deleteSticker(
 
   const service = createServiceClient();
 
+  const { data: owners, error: ownersError } = await service
+    .from("customer_stickers")
+    .select("customer_id")
+    .eq("sticker_id", stickerId);
+  if (ownersError) return { error: "No se pudo comprobar si algún cliente lo tiene." };
+
+  const ownerCount = new Set((owners ?? []).map((o) => o.customer_id)).size;
+  if (ownerCount > 0) {
+    return {
+      error:
+        ownerCount === 1
+          ? "1 cliente ya tiene este sticker, así que no se puede eliminar. Edítalo para cambiarle el arte (lo conserva) o desactívalo para que deje de salir."
+          : `${ownerCount} clientes ya tienen este sticker, así que no se puede eliminar. Edítalo para cambiarle el arte (lo conservan) o desactívalo para que deje de salir.`,
+    };
+  }
+
   const { data: sticker } = await service
     .from("stickers")
     .select("image_url")
     .eq("id", stickerId)
     .maybeSingle();
-
-  const { error: ownedError } = await service
-    .from("customer_stickers")
-    .delete()
-    .eq("sticker_id", stickerId);
-  if (ownedError) return { error: "No se pudo quitar el sticker de los álbumes." };
 
   const { error: linkError } = await service
     .from("campaign_stickers")
@@ -209,8 +225,6 @@ export async function deleteSticker(
   }
 
   revalidatePath("/admin/stickers");
-  revalidatePath("/collection");
-  revalidatePath("/home");
   return {};
 }
 
